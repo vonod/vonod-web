@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/logo_negro_vonod.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vonod — Voice AI agents that actually call</title>
+    <meta name="description" content="Design conversational voice agents, launch outbound campaigns, and watch every call transcribed and analyzed — in one platform. Bring your own keys, no code, sub-second latency." />
+
+    <!-- Open Graph / social -->
+    <meta property="og:title" content="Vonod — Voice AI agents that actually call" />
+    <meta property="og:description" content="Build voice agents that make real phone calls. Visual workflows, live transcripts, BYOK." />
+    <meta property="og:type" content="website" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <script>
+      // Apply theme before render to avoid a flash.
+      (function () {
+        var t = localStorage.getItem('theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        if (t === 'dark') document.documentElement.classList.add('dark');
+      })();
+    </script>
+    <style>
+      html { background-color: #ffffff; }
+      html.dark { background-color: #09090b; }
+    </style>
+  </head>
+  <body class="antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

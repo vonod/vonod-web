@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Vonod brand tokens — mirrored from the app (workflow-editor/frontend/src/
+   index.css) so the marketing site matches exactly. Monochromatic, light+dark. */
+@layer base {
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f3f4f6;
+    --bg-card: #ffffff;
+    --border-color: #e5e7eb;
+    --border-hover: #d1d5db;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --accent: #111827;
+  }
+  .dark {
+    --bg-primary: #09090b;
+    --bg-secondary: #18181b;
+    --bg-card: #121214;
+    --border-color: #27272a;
+    --border-hover: #3f3f46;
+    --text-primary: #fafafa;
+    --text-secondary: #a1a1aa;
+    --accent: #fafafa;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
