@@ -2,34 +2,175 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Vonod brand tokens — mirrored from the app (workflow-editor/frontend/src/
-   index.css) so the marketing site matches exactly. Monochromatic, light+dark. */
+/* ─────────────────────────────────────────────────────────────────────────
+   Design tokens — Composio style reference (composio.dev), as captured by
+   RicoUI. A dark, technical developer-tools system anchored on a single
+   deep-electric-blue voltage (#0007cd) over a near-black floor, with cards
+   floating on gray-tinted surfaces.
+
+   Dark only. The reference documents no light palette, and inventing one
+   would mean shipping colours outside the token set.
+
+   Two deliberate deviations from the captured snapshot, both of which keep
+   the rendered result identical at default settings:
+
+   1. Sizes are the documented px values expressed in rem (1rem = 16px) and
+      letter spacing in em, so the scale still responds to the reader's own
+      browser font size. A hard px type scale cannot (WCAG 1.4.4).
+   2. abcDiatype is licensed and we do not have it, so Inter — the
+      substitute the reference itself names — carries display and body.
+   ───────────────────────────────────────────────────────────────────────── */
 @layer base {
   :root {
-    --bg-primary: #ffffff;
-    --bg-secondary: #f3f4f6;
-    --bg-card: #ffffff;
-    --border-color: #e5e7eb;
-    --border-hover: #d1d5db;
-    --text-primary: #111827;
-    --text-secondary: #6b7280;
-    --accent: #111827;
-  }
-  .dark {
-    --bg-primary: #09090b;
-    --bg-secondary: #18181b;
-    --bg-card: #121214;
-    --border-color: #27272a;
-    --border-hover: #3f3f46;
-    --text-primary: #fafafa;
-    --text-secondary: #a1a1aa;
-    --accent: #fafafa;
+    color-scheme: dark;
+
+    /* Brand voltage. Fills only, never text on a dark surface: #0007cd on
+       #0f0f0f is 1.7:1 and unreadable. White on #0007cd is 11:1, which is
+       why the blue only ever appears as a filled surface under white. */
+    --color-primary: #0007cd;
+    --color-primary-active: #0005a3;
+    --color-primary-glow: #1a26ff;
+
+    /* Text */
+    --color-ink: #ffffff;
+    --color-body: #a8a8a8;
+    --color-body-strong: #ffffff;
+    --color-muted: #888888;
+    --color-muted-soft: #666666; /* 3.4:1 — large text and hairlines only */
+
+    /* Lines */
+    --color-hairline: #222222;
+    --color-hairline-soft: #1a1a1a;
+    --color-hairline-strong: #333333;
+
+    /* Surfaces */
+    --color-canvas: #0f0f0f;
+    --color-canvas-deep: #000000;
+    --color-surface-card: #181818;
+    --color-surface-card-elevated: #222222;
+    --color-surface-strong: #2a2a2a;
+
+    /* On-colour */
+    --color-on-primary: #ffffff;
+    --color-on-dark: #ffffff;
+
+    /* Accents & semantics */
+    --color-accent-cyan: #00d4ff;
+    --color-accent-violet: #7b3aed;
+    --color-semantic-error: #ff4d4d;
+    --color-semantic-success: #33d17a;
+
+    /* Spacing scale */
+    --spacing-xxs: 0.25rem;   /* 4px  */
+    --spacing-xs: 0.5rem;     /* 8px  */
+    --spacing-sm: 0.75rem;    /* 12px */
+    --spacing-base: 1rem;     /* 16px */
+    --spacing-md: 1.25rem;    /* 20px */
+    --spacing-lg: 1.5rem;     /* 24px */
+    --spacing-xl: 2rem;       /* 32px */
+    --spacing-xxl: 3rem;      /* 48px */
+    --spacing-section: 6rem;  /* 96px */
+
+    /* Radii */
+    --radius-xs: 4px;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-pill: 9999px;
   }
 
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--color-canvas);
+  }
+
   body {
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--color-canvas);
+    color: var(--color-body-strong);
+    font-family: 'abcDiatype', Inter, ui-sans-serif, system-ui, sans-serif;
+  }
+
+  /* One visible focus indicator for the whole site. Cyan clears 3:1 against
+     canvas, both card surfaces and the primary blue, so it stays visible
+     wherever a control sits (WCAG 2.4.7 / 1.4.11). */
+  :focus-visible {
+    outline: 2px solid var(--color-accent-cyan);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  ::selection {
+    background: var(--color-primary-glow);
+    color: var(--color-on-primary);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Components — geometry taken from the reference's component table
+   (40px control height, 8px control radius, 16px card radius).
+   ───────────────────────────────────────────────────────────────────────── */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-md
+           text-button font-medium transition-colors duration-200
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* height 40px = 10px padding + 20px line box; py-2.5 keeps it exact */
+  .btn-primary {
+    @apply btn bg-primary text-on-primary px-[18px] py-2.5
+           hover:bg-primary-glow active:bg-primary-active;
+  }
+
+  .btn-secondary {
+    @apply btn bg-surface-card-elevated text-body-strong px-[18px] py-2.5
+           hover:bg-surface-strong;
+  }
+
+  /* 1px border eats into the box, so padding drops by 1px to hold 40px */
+  .btn-outline {
+    @apply btn border border-hairline-strong text-body-strong px-[17px] py-[9px]
+           hover:border-muted-soft hover:bg-surface-card;
+  }
+
+  .btn-tertiary {
+    @apply btn text-body hover:text-body-strong;
+  }
+
+  /* Sized up for a hero: same tokens, one step of padding larger. */
+  .btn-lg {
+    @apply px-lg py-3.5 text-body-md;
+  }
+
+  .card {
+    @apply rounded-xl border border-hairline bg-surface-card;
+  }
+
+  .badge-pill {
+    @apply inline-flex items-center gap-2 rounded-pill bg-surface-card-elevated
+           px-2.5 py-1 text-caption-uppercase uppercase text-body-strong;
+  }
+
+  /* The brand's signature: a soft blue spotlight bleeding out of a dark
+     surface. Sits behind content, never over it. */
+  .spotlight::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -20%;
+    width: 70%;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    border-radius: var(--radius-pill);
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-primary-glow) 34%, transparent) 0%,
+      color-mix(in srgb, var(--color-primary) 16%, transparent) 38%,
+      transparent 68%
+    );
+    filter: blur(60px);
+    pointer-events: none;
+    z-index: 0;
   }
 }

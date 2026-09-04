@@ -7,5 +7,7 @@ export default defineConfig({
   // Served from https://vonod.github.io/vonod-web/, not a domain root.
   base: '/vonod-web/',
   plugins: [react()],
-  server: { port: 3001 },
+  // Honour PORT so a second checkout (or a preview harness) can run
+  // alongside the one already sitting on 3001.
+  server: { port: Number(process.env.PORT) || 3001 },
 });

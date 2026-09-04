@@ -8,10 +8,16 @@ import GlobeBackground from './components/GlobeBackground';
 
 /**
  * Vonod marketing landing — standalone static site (its own app, decoupled from
- * the platform). Brand-aligned (vonod-* tokens, Inter, JetBrains Mono, rounded,
- * monochromatic, light+dark) and elevated: animated hero orb + 3D dot globe, a
- * self-typing live-transcript demo, scroll-reveal sections. CSS-only motion,
- * disabled under prefers-reduced-motion. CTAs point at the app (VITE_APP_URL).
+ * the platform). Styled on the Composio design system captured by RicoUI:
+ * dark-only, near-black canvas, one deep-electric-blue voltage used as a fill
+ * and as the spotlight glow behind the hero. Type, spacing and radii come from
+ * that token set (see index.css / tailwind.config.js) — no raw hex here beyond
+ * the two transcript speaker colours, which are token values passed to inline
+ * styles because they also drive a CSS gradient.
+ *
+ * Elevated but cheap: blue spotlight + 3D dot globe, a self-typing
+ * live-transcript demo, scroll-reveal sections. CSS-only motion, disabled
+ * under prefers-reduced-motion. CTAs point at the app (VITE_APP_URL).
  *
  * The entire page sells one thing: massive phone campaigns at scale.
  * Not "agents." Campaigns. Volume. Concurrency. Outcomes.
@@ -44,9 +50,13 @@ function useReveal() {
   }, []);
 }
 
+// Two voices, two token colours. Both clear 4.5:1 on the card surface, which
+// matters: the speaker name beside each transcript line is 11px. accent-violet
+// would have been the more obvious "AI" colour and is in the token set, but it
+// lands at 3.1:1 on #181818 — too low for text this small.
 const SPEAKERS = {
-  agent: { name: 'Agent', role: 'AI', color: '#818cf8', rgb: [129, 140, 248], Icon: Bot },     // indigo
-  user: { name: 'Marcos', role: 'Contact', color: '#34d399', rgb: [52, 211, 153], Icon: User }, // emerald
+  agent: { name: 'Agent', role: 'AI', color: 'var(--color-accent-cyan)', Icon: Bot },
+  user: { name: 'Marcos', role: 'Contact', color: 'var(--color-semantic-success)', Icon: User },
 };
 
 // The "call" object — the per-contact input variables this run is fed. The agent
@@ -212,47 +222,47 @@ function LiveTranscript() {
   const latestMsg = latest >= 0 ? (actStates[latest] >= 2 ? ACTIONS[latest].done : ACTIONS[latest].busy) : null;
 
   return (
-    <div ref={rootRef} className="rounded-2xl border border-vonod-border bg-vonod-card overflow-hidden shadow-xl">
+    <div ref={rootRef} className="rounded-xl border border-hairline bg-surface-card overflow-hidden shadow-xl">
       {/* Header — campaign progress + a single latency badge */}
-      <div className="flex items-center gap-2 px-4 py-2.5 border-b border-vonod-border">
-        <span className="w-2 h-2 rounded-full bg-emerald-500" />
-        <span className="text-xs font-medium text-vonod-secondary">Live call · 2,417 / 5,000</span>
-        <span className="ml-auto flex items-center gap-2 font-mono text-[11px] text-vonod-secondary">
-          <span className="inline-flex items-center gap-1 text-vonod-primary"><Zap size={11} /> {AVG_REPLY} reply</span>
+      <div className="flex items-center gap-2 px-4 py-2.5 border-b border-hairline">
+        <span className="w-2 h-2 rounded-full bg-success" />
+        <span className="text-caption font-medium text-body">Live call · 2,417 / 5,000</span>
+        <span className="ml-auto flex items-center gap-2 font-mono text-[0.6875rem] text-body">
+          <span className="inline-flex items-center gap-1 text-body-strong"><Zap size={11} /> {AVG_REPLY} reply</span>
           <span>00:14</span>
         </span>
       </div>
 
       {/* Contact — the per-call input variables, condensed */}
-      <div className="flex items-center gap-2.5 px-4 py-2.5 border-b border-vonod-border">
-        <span className="w-8 h-8 rounded-lg bg-vonod-surface border border-vonod-border flex items-center justify-center text-[11px] font-semibold text-vonod-primary shrink-0">
+      <div className="flex items-center gap-2.5 px-4 py-2.5 border-b border-hairline">
+        <span className="w-8 h-8 rounded-lg bg-surface-card-elevated border border-hairline flex items-center justify-center text-[0.6875rem] font-semibold text-body-strong shrink-0">
           {CONTACT.initials}
         </span>
         <div className="min-w-0 flex-1">
-          <div className="text-xs font-medium text-vonod-primary truncate">
-            {CONTACT.name} <span className="text-vonod-secondary font-normal">· {CONTACT.company}</span>
+          <div className="text-caption font-medium text-body-strong truncate">
+            {CONTACT.name} <span className="text-body font-normal">· {CONTACT.company}</span>
           </div>
-          <div className="font-mono text-[10px] text-vonod-secondary truncate">{CONTACT.vars}</div>
+          <div className="font-mono text-[0.625rem] text-body truncate">{CONTACT.vars}</div>
         </div>
-        <span className="font-mono text-[10px] text-vonod-secondary px-1.5 py-0.5 rounded bg-vonod-surface border border-vonod-border shrink-0">
+        <span className="font-mono text-[0.625rem] text-body px-1.5 py-0.5 rounded bg-surface-card-elevated border border-hairline shrink-0">
           call · {CONTACT.varCount} vars
         </span>
       </div>
 
       {/* ONE call waveform — both voices on the same mic, two colours at once */}
-      <div className="px-4 pt-3 pb-2.5 border-b border-vonod-border">
+      <div className="px-4 pt-3 pb-2.5 border-b border-hairline">
         <div className="flex items-center gap-3 mb-2">
           {['agent', 'user'].map((w) => {
             const s = SPEAKERS[w];
             return (
               <span key={w} ref={(el) => { chipRef.current[w] = el; }}
-                className="inline-flex items-center gap-1.5 text-[11px] font-medium transition-opacity duration-150"
+                className="inline-flex items-center gap-1.5 text-[0.6875rem] font-medium transition-opacity duration-150"
                 style={{ color: s.color, opacity: 0.32 }}>
                 <s.Icon size={13} /> {s.name}
               </span>
             );
           })}
-          <span ref={capRef} className="ml-auto text-[10px] uppercase tracking-wider text-vonod-secondary">Listening…</span>
+          <span ref={capRef} className="ml-auto text-caption-uppercase uppercase text-body">Listening…</span>
         </div>
         <div ref={waveRef} className="cw" style={{ '--ca': SPEAKERS.agent.color, '--cb': SPEAKERS.user.color }} aria-hidden="true">
           {Array.from({ length: N_BARS }).map((_, i) => (
@@ -272,14 +282,14 @@ function LiveTranscript() {
           return (
             <div key={i} className="lp-line">
               {line.barge && (
-                <div className="flex items-center justify-center gap-1.5 mb-1.5 text-[10px] font-medium text-amber-600 dark:text-amber-400">
+                <div className="flex items-center justify-center gap-1.5 mb-1.5 text-[0.625rem] font-medium text-error">
                   <Zap size={11} /> both speaking — agent yields the floor
                 </div>
               )}
               <div className="flex items-start gap-2">
-                <span className="text-[10px] font-semibold mt-1 shrink-0 w-12 text-right" style={{ color: s.color }}>{s.name}</span>
-                <p className="flex-1 text-sm leading-relaxed text-vonod-primary">
-                  {text}{isActive && !done && <span className="lp-caret" style={{ background: s.color }} />}{done && line.cut && <span className="text-vonod-secondary"> ⏸</span>}
+                <span className="text-[0.625rem] font-semibold mt-1 shrink-0 w-12 text-right" style={{ color: s.color }}>{s.name}</span>
+                <p className="flex-1 text-body-sm leading-relaxed text-body-strong">
+                  {text}{isActive && !done && <span className="lp-caret" style={{ background: s.color }} />}{done && line.cut && <span className="text-body"> ⏸</span>}
                 </p>
               </div>
             </div>
@@ -288,8 +298,8 @@ function LiveTranscript() {
       </div>
 
       {/* Actions — the agent works across your tools, not just one */}
-      <div className="px-4 py-3 border-t border-vonod-border">
-        <div className="flex items-center gap-1.5 mb-2 text-[10px] uppercase tracking-wider text-vonod-secondary">
+      <div className="px-4 py-3 border-t border-hairline">
+        <div className="flex items-center gap-1.5 mb-2 text-caption-uppercase uppercase text-body">
           <Zap size={11} /> Takes action across your tools
         </div>
         <div className="grid grid-cols-3 gap-2">
@@ -299,22 +309,22 @@ function LiveTranscript() {
             const isDone = st >= 2;
             return (
               <div key={a.id}
-                className={`rounded-xl border px-2.5 py-2 transition-all duration-300 ${active ? 'border-vonod-border-hover bg-vonod-surface/60' : 'border-vonod-border opacity-55'}`}>
+                className={`rounded-xl border px-2.5 py-2 transition-all duration-300 ${active ? 'border-hairline-strong bg-surface-card-elevated/60' : 'border-hairline opacity-55'}`}>
                 <div className="flex items-center gap-1.5 mb-1">
-                  <a.Icon size={13} className={isDone ? 'text-emerald-600 dark:text-emerald-400' : 'text-vonod-primary'} />
-                  {isDone ? <Check size={11} className="ml-auto text-emerald-600 dark:text-emerald-400" />
+                  <a.Icon size={13} className={isDone ? 'text-success' : 'text-body-strong'} />
+                  {isDone ? <Check size={11} className="ml-auto text-success" />
                     : active ? <span className="lp-dot ml-auto" /> : null}
                 </div>
-                <div className="text-[10px] font-medium text-vonod-primary leading-tight truncate">{a.label}</div>
-                <div className="font-mono text-[9px] text-vonod-secondary truncate">{a.fn}</div>
+                <div className="text-[0.625rem] font-medium text-body-strong leading-tight truncate">{a.label}</div>
+                <div className="font-mono text-[0.5625rem] text-body truncate">{a.fn}</div>
               </div>
             );
           })}
         </div>
-        <div className="mt-2 h-4 text-[11px] text-vonod-secondary flex items-center gap-1.5">
+        <div className="mt-2 h-4 text-[0.6875rem] text-body flex items-center gap-1.5">
           {latestMsg && (
             <span className="lp-line inline-flex items-center gap-1.5">
-              <Check size={12} className="text-emerald-600 dark:text-emerald-400" /> {latestMsg}
+              <Check size={12} className="text-success" /> {latestMsg}
             </span>
           )}
         </div>
@@ -342,27 +352,24 @@ export default function LandingPage() {
   useReveal();
 
   return (
-    <div className="min-h-screen bg-vonod-bg text-vonod-primary font-sans antialiased overflow-x-hidden">
+    <div className="min-h-screen bg-canvas text-body-strong font-sans antialiased overflow-x-hidden">
       <LandingStyles />
 
       {/* ── Nav ───────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 backdrop-blur-xl bg-vonod-bg/70 border-b border-vonod-border/60">
-        <nav className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <header className="sticky top-0 z-40 backdrop-blur-xl bg-canvas/80 border-b border-hairline">
+        <nav className="max-w-content mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <img src={asset('logo_negro_vonod.png')} alt="Vonod" className="w-7 h-7 object-contain dark:hidden" />
-            <img src={asset('logo_blanco_vonod.png')} alt="Vonod" className="w-7 h-7 object-contain hidden dark:block" />
-            <span className="font-semibold tracking-tight text-lg">Vonod</span>
+            <img src={asset('logo_blanco_vonod.png')} alt="Vonod" className="w-7 h-7 object-contain" />
+            <span className="font-semibold tracking-tight text-title-md">Vonod</span>
           </div>
-          <div className="hidden md:flex items-center gap-8 text-sm text-vonod-secondary">
-            <a href="#features" className="hover:text-vonod-primary transition-colors">Platform</a>
-            <a href="#how" className="hover:text-vonod-primary transition-colors">How it works</a>
-            <a href="#demo" className="hover:text-vonod-primary transition-colors">Live campaign</a>
+          <div className="hidden md:flex items-center gap-xl text-nav-link text-body">
+            <a href="#features" className="hover:text-body-strong transition-colors">Platform</a>
+            <a href="#how" className="hover:text-body-strong transition-colors">How it works</a>
+            <a href="#demo" className="hover:text-body-strong transition-colors">Live campaign</a>
           </div>
           <div className="flex items-center gap-2">
-            <a href={APP_URL} className="px-4 py-2 text-sm font-medium text-vonod-secondary hover:text-vonod-primary transition-colors rounded-full">
-              Log in
-            </a>
-            <a href={APP_URL} className="group px-4 py-2 text-sm font-medium bg-vonod-primary text-vonod-bg rounded-full hover:opacity-90 transition-all flex items-center gap-1.5">
+            <a href={APP_URL} className="btn-tertiary px-base py-2.5">Log in</a>
+            <a href={APP_URL} className="btn-primary group">
               Get started
               <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
             </a>
@@ -372,29 +379,29 @@ export default function LandingPage() {
 
       {/* ── Hero ──────────────────────────────────────────────────────── */}
       <section className="relative">
-        <div className="lp-orb" aria-hidden="true" />
+        <div className="lp-glow" aria-hidden="true" />
         <div className="lp-grid" aria-hidden="true" />
         <GlobeBackground />
-        <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-16 md:pt-28 md:pb-24 grid lg:grid-cols-2 gap-12 items-center">
+        <div className="relative max-w-content mx-auto px-6 pt-xxl pb-xl md:pt-section md:pb-section grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <span data-reveal className="reveal inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-vonod-border bg-vonod-surface/60 text-xs font-medium text-vonod-secondary mb-6">
+            <span data-reveal className="reveal badge-pill mb-lg">
               <TrendingUp size={13} /> AI phone campaigns at scale
             </span>
-            <h1 data-reveal className="reveal text-4xl md:text-6xl font-medium tracking-tighter leading-[1.05] mb-6" style={{ transitionDelay: '60ms' }}>
+            <h1 data-reveal className="reveal text-display-lg md:text-display-mega font-medium mb-lg" style={{ transitionDelay: '60ms' }}>
               Dial millions.<br />Not one at a time.
             </h1>
-            <p data-reveal className="reveal text-lg text-vonod-secondary leading-relaxed max-w-md mb-8" style={{ transitionDelay: '120ms' }}>
+            <p data-reveal className="reveal text-body-md text-body max-w-md mb-xl" style={{ transitionDelay: '120ms' }}>
               Vonod runs massive outbound phone campaigns — thousands of concurrent AI-powered calls, with the intelligence to handle each conversation individually.
             </p>
             <div data-reveal className="reveal flex flex-wrap items-center gap-3" style={{ transitionDelay: '180ms' }}>
-              <a href={APP_URL} className="group px-6 py-3.5 bg-vonod-primary text-vonod-bg font-medium rounded-full hover:opacity-90 transition-all flex items-center gap-2">
+              <a href={APP_URL} className="btn-primary btn-lg group">
                 Launch your first campaign <ArrowRight size={17} className="group-hover:translate-x-0.5 transition-transform" />
               </a>
-              <a href="#demo" className="px-6 py-3.5 border border-vonod-border rounded-full font-medium hover:border-vonod-border-hover hover:bg-vonod-surface/50 transition-all flex items-center gap-2">
+              <a href="#demo" className="btn-outline btn-lg">
                 <PhoneCall size={17} /> See it in action
               </a>
             </div>
-            <div data-reveal className="reveal flex items-center gap-6 mt-10 text-xs text-vonod-secondary" style={{ transitionDelay: '240ms' }}>
+            <div data-reveal className="reveal flex items-center gap-6 mt-10 text-caption text-body" style={{ transitionDelay: '240ms' }}>
               <span className="flex items-center gap-1.5"><Check size={14} /> Thousands concurrent</span>
               <span className="flex items-center gap-1.5"><Check size={14} /> No code</span>
               <span className="flex items-center gap-1.5"><Check size={14} /> Sub-second per call</span>
@@ -402,18 +409,17 @@ export default function LandingPage() {
           </div>
 
           <div data-reveal className="reveal lp-float relative" style={{ transitionDelay: '160ms' }}>
-            <div className="rounded-3xl border border-vonod-border bg-vonod-card shadow-2xl p-6">
+            <div className="rounded-xl border border-hairline bg-surface-card shadow-2xl p-6">
               {/* Campaign header */}
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-11 h-11 rounded-2xl bg-vonod-primary flex items-center justify-center p-2.5">
-                  <img src={asset('logo_blanco_vonod.png')} alt="Vonod" className="w-full h-full object-contain dark:hidden" />
-                  <img src={asset('logo_negro_vonod.png')} alt="Vonod" className="w-full h-full object-contain hidden dark:block" />
+                <div className="w-11 h-11 rounded-xl bg-primary flex items-center justify-center p-2.5">
+                  <img src={asset('logo_blanco_vonod.png')} alt="" className="w-full h-full object-contain" />
                 </div>
                 <div>
-                  <div className="font-medium text-sm">Q2 Outreach · Active</div>
-                  <div className="text-xs text-vonod-secondary">1,247 calls completed today</div>
+                  <div className="font-medium text-body-sm">Q2 Outreach · Active</div>
+                  <div className="text-caption text-body">1,247 calls completed today</div>
                 </div>
-                <span className="ml-auto text-[11px] font-medium px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                <span className="ml-auto text-[0.6875rem] font-medium px-2 py-1 rounded-full bg-success/10 text-success border border-success/25">
                   Live · 312 concurrent
                 </span>
               </div>
@@ -424,23 +430,23 @@ export default function LandingPage() {
                   ['Booked', '12.7%'],
                   ['Avg cost', '$0.14'],
                 ].map(([k, v]) => (
-                  <div key={k} className="rounded-xl border border-vonod-border bg-vonod-surface/50 py-2 px-2.5 text-center">
-                    <div className="font-mono text-sm font-medium">{v}</div>
-                    <div className="text-[10px] uppercase tracking-wider text-vonod-secondary mt-0.5">{k}</div>
+                  <div key={k} className="rounded-xl border border-hairline bg-surface-card/70 py-2 px-2.5 text-center">
+                    <div className="font-mono text-body-sm font-medium">{v}</div>
+                    <div className="text-caption-uppercase uppercase text-body mt-0.5">{k}</div>
                   </div>
                 ))}
               </div>
               {/* Progress bar */}
               <div className="mb-4">
-                <div className="flex justify-between text-[11px] text-vonod-secondary mb-1.5">
+                <div className="flex justify-between text-[0.6875rem] text-body mb-1.5">
                   <span>Progress · 1,247 / 5,000</span>
                   <span>24.9%</span>
                 </div>
-                <div className="h-1.5 rounded-full bg-vonod-surface overflow-hidden">
-                  <div className="h-full w-[24.9%] rounded-full bg-vonod-primary transition-all" />
+                <div className="h-1.5 rounded-full bg-surface-card-elevated overflow-hidden">
+                  <div className="h-full w-[24.9%] rounded-full bg-primary transition-all" />
                 </div>
               </div>
-              <div className="flex items-center justify-between text-[11px] text-vonod-secondary">
+              <div className="flex items-center justify-between text-[0.6875rem] text-body">
                 <span>Avg turn-around: 0.7s</span>
                 <span>Est. completion: 2h 14m</span>
               </div>
@@ -450,47 +456,47 @@ export default function LandingPage() {
       </section>
 
       {/* ── Trust strip ───────────────────────────────────────────────── */}
-      <section className="border-y border-vonod-border/60 bg-vonod-surface/30">
-        <div className="max-w-6xl mx-auto px-6 py-6 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs font-medium text-vonod-secondary">
-          <span className="uppercase tracking-widest text-[10px]">Runs on your stack</span>
+      <section className="border-y border-hairline bg-canvas-deep">
+        <div className="max-w-content mx-auto px-6 py-6 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-caption font-medium text-body">
+          <span className="uppercase tracking-widest text-[0.625rem]">Runs on your stack</span>
           {['OpenAI', 'Anthropic', 'Deepgram', 'ElevenLabs', 'Twilio', 'SIP'].map((b) => (
-            <span key={b} className="font-mono text-vonod-primary/80">{b}</span>
+            <span key={b} className="font-mono text-body-strong/80">{b}</span>
           ))}
         </div>
       </section>
 
       {/* ── Features ──────────────────────────────────────────────────── */}
-      <section id="features" className="max-w-6xl mx-auto px-6 py-20 md:py-28">
+      <section id="features" className="max-w-content mx-auto px-6 py-xxl md:py-section">
         <div data-reveal className="reveal max-w-2xl mb-14">
-          <h2 className="text-3xl md:text-4xl font-medium tracking-tighter mb-4">Built for volume from day one.</h2>
-          <p className="text-vonod-secondary text-lg">Every feature designed to operate at campaign scale — thousands of simultaneous calls, each one individually intelligent.</p>
+          <h2 className="text-display-md md:text-display-xl font-medium mb-base">Built for volume from day one.</h2>
+          <p className="text-body text-body-md">Every feature designed to operate at campaign scale — thousands of simultaneous calls, each one individually intelligent.</p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {FEATURES.map((f, i) => (
-            <div key={f.title} data-reveal className="reveal group p-6 rounded-2xl border border-vonod-border bg-vonod-card hover:border-vonod-border-hover hover:-translate-y-1 transition-all duration-300" style={{ transitionDelay: `${(i % 3) * 80}ms` }}>
-              <div className="w-11 h-11 rounded-xl bg-vonod-surface border border-vonod-border flex items-center justify-center mb-4 group-hover:bg-vonod-primary group-hover:text-vonod-bg transition-colors">
+            <div key={f.title} data-reveal className="reveal group p-7 card hover:border-hairline-strong hover:-translate-y-1 transition-all duration-300" style={{ transitionDelay: `${(i % 3) * 80}ms` }}>
+              <div className="w-11 h-11 rounded-xl bg-surface-card-elevated border border-hairline flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-on-primary transition-colors">
                 <f.icon size={20} />
               </div>
-              <h3 className="font-medium text-lg mb-2 tracking-tight">{f.title}</h3>
-              <p className="text-sm text-vonod-secondary leading-relaxed">{f.body}</p>
+              <h3 className="font-medium text-title-md mb-2">{f.title}</h3>
+              <p className="text-body-sm text-body">{f.body}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* ── Live campaign demo ───────────────────────────────────────── */}
-      <section id="demo" className="border-y border-vonod-border/60 bg-vonod-surface/30">
-        <div className="max-w-6xl mx-auto px-6 py-20 md:py-28 grid lg:grid-cols-[1fr_1.1fr] gap-12 items-center">
+      <section id="demo" className="border-y border-hairline bg-canvas-deep">
+        <div className="max-w-content mx-auto px-6 py-xxl md:py-section grid lg:grid-cols-[1fr_1.1fr] gap-12 items-center">
           <div data-reveal className="reveal">
-            <span className="inline-flex items-center gap-2 text-xs font-medium text-vonod-secondary mb-4">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" /> Live call — one of thousands
+            <span className="inline-flex items-center gap-2 text-caption font-medium text-body mb-4">
+              <span className="w-2 h-2 rounded-full bg-success" /> Live call — one of thousands
             </span>
-            <h2 className="text-3xl md:text-4xl font-medium tracking-tighter mb-4">Every call is individual. Every campaign is massive.</h2>
-            <p className="text-vonod-secondary text-lg leading-relaxed mb-6">
+            <h2 className="text-display-md md:text-display-xl font-medium mb-base">Every call is individual. Every campaign is massive.</h2>
+            <p className="text-body text-body-md mb-lg">
               While your campaign dials thousands, each conversation is an intelligent, context-aware interaction. No scripts. No templates. Every person gets a real conversation, with real branching based on what they say.
             </p>
-            <a href={APP_URL} className="group inline-flex items-center gap-2 font-medium hover:gap-3 transition-all">
-              Launch a campaign <ChevronRight size={18} />
+            <a href={APP_URL} className="group inline-flex items-center gap-2 font-medium text-body-strong hover:text-accent-cyan transition-colors">
+              Launch a campaign <ChevronRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
             </a>
           </div>
           <div data-reveal className="reveal" style={{ transitionDelay: '120ms' }}>
@@ -500,32 +506,31 @@ export default function LandingPage() {
       </section>
 
       {/* ── How it works ──────────────────────────────────────────────── */}
-      <section id="how" className="max-w-6xl mx-auto px-6 py-20 md:py-28">
+      <section id="how" className="max-w-content mx-auto px-6 py-xxl md:py-section">
         <div data-reveal className="reveal text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-4xl font-medium tracking-tighter mb-4">From list to launch in minutes.</h2>
-          <p className="text-vonod-secondary text-lg">Upload your contacts, configure the campaign, and let Vonod dial while you watch the results stream in.</p>
+          <h2 className="text-display-md md:text-display-xl font-medium mb-base">From list to launch in minutes.</h2>
+          <p className="text-body text-body-md">Upload your contacts, configure the campaign, and let Vonod dial while you watch the results stream in.</p>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {STEPS.map((s, i) => (
             <div key={s.n} data-reveal className="reveal relative" style={{ transitionDelay: `${i * 100}ms` }}>
-              <div className="font-mono text-5xl font-medium text-vonod-border-hover mb-4">{s.n}</div>
-              <h3 className="font-medium text-xl mb-2 tracking-tight">{s.title}</h3>
-              <p className="text-sm text-vonod-secondary leading-relaxed">{s.body}</p>
+              <div className="font-mono text-display-xl font-medium text-muted-soft mb-lg">{s.n}</div>
+              <h3 className="font-medium text-display-sm mb-2">{s.title}</h3>
+              <p className="text-body-sm text-body">{s.body}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* ── Final CTA ─────────────────────────────────────────────────── */}
-      <section className="max-w-6xl mx-auto px-6 pb-24">
-        <div data-reveal className="reveal relative overflow-hidden rounded-3xl border border-vonod-border bg-vonod-card px-8 py-16 md:py-20 text-center">
-          <div className="lp-orb lp-orb-cta" aria-hidden="true" />
+      <section className="max-w-content mx-auto px-6 pb-24">
+        <div data-reveal className="reveal spotlight relative overflow-hidden card px-xl py-xxl md:py-section text-center">
           <div className="relative">
-            <h2 className="text-3xl md:text-5xl font-medium tracking-tighter mb-5">Your first 5,000 calls are one click away.</h2>
-            <p className="text-vonod-secondary text-lg max-w-xl mx-auto mb-8">
+            <h2 className="text-display-md md:text-display-xl font-medium mb-md">Your first 5,000 calls are one click away.</h2>
+            <p className="text-body text-body-md max-w-xl mx-auto mb-xl">
               Upload a list, configure your agent, and launch. No sales call. No demo. No commitment.
             </p>
-            <a href={APP_URL} className="group px-7 py-4 bg-vonod-primary text-vonod-bg font-medium rounded-full hover:opacity-90 transition-all inline-flex items-center gap-2">
+            <a href={APP_URL} className="btn-primary btn-lg group">
               Launch a campaign free <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
             </a>
           </div>
@@ -533,12 +538,11 @@ export default function LandingPage() {
       </section>
 
       {/* ── Footer ────────────────────────────────────────────────────── */}
-      <footer className="border-t border-vonod-border/60">
-        <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-vonod-secondary">
+      <footer className="border-t border-hairline">
+        <div className="max-w-content mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-body-sm text-body">
           <div className="flex items-center gap-2.5">
-            <img src={asset('logo_negro_vonod.png')} alt="" className="w-6 h-6 object-contain dark:hidden" />
-            <img src={asset('logo_blanco_vonod.png')} alt="" className="w-6 h-6 object-contain hidden dark:block" />
-            <span className="font-medium text-vonod-primary">Vonod</span>
+            <img src={asset('logo_blanco_vonod.png')} alt="" className="w-6 h-6 object-contain" />
+            <span className="font-medium text-body-strong">Vonod</span>
           </div>
           <p>© {new Date().getFullYear()} Vonod. AI phone campaigns at scale.</p>
         </div>
@@ -553,17 +557,21 @@ function LandingStyles() {
       [data-reveal].reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
       [data-reveal].reveal.in { opacity: 1; transform: none; }
 
-      .lp-orb { position:absolute; top:-180px; left:50%; transform:translateX(-50%); width:680px; height:680px; border-radius:9999px; pointer-events:none; z-index:0;
-        background: radial-gradient(circle, color-mix(in srgb, var(--text-primary) 12%, transparent) 0%, transparent 62%);
-        filter: blur(20px); animation: lp-breathe 9s ease-in-out infinite; }
-      .lp-orb-cta { top:auto; bottom:-300px; width:520px; height:520px; opacity:.7; }
-      .lp-grid { position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.5;
-        background-image: linear-gradient(var(--border-color) 1px, transparent 1px), linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+      /* The brand's signature: one deep-electric-blue spotlight bleeding out
+         of the near-black floor, behind the hero. */
+      .lp-glow { position:absolute; top:-220px; left:50%; transform:translateX(-50%); width:900px; height:760px; pointer-events:none; z-index:0;
+        background: radial-gradient(ellipse at center,
+          color-mix(in srgb, var(--color-primary-glow) 30%, transparent) 0%,
+          color-mix(in srgb, var(--color-primary) 18%, transparent) 34%,
+          transparent 68%);
+        filter: blur(50px); animation: lp-breathe 9s ease-in-out infinite; }
+      .lp-grid { position:absolute; inset:0; z-index:0; pointer-events:none;
+        background-image: linear-gradient(var(--color-hairline) 1px, transparent 1px), linear-gradient(90deg, var(--color-hairline) 1px, transparent 1px);
         background-size: 56px 56px;
         -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 0%, transparent 75%);
         mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 0%, transparent 75%); }
 
-      @keyframes lp-breathe { 0%,100%{ transform:translateX(-50%) scale(1); opacity:.85 } 50%{ transform:translateX(-50%) scale(1.12); opacity:1 } }
+      @keyframes lp-breathe { 0%,100%{ transform:translateX(-50%) scale(1); opacity:.8 } 50%{ transform:translateX(-50%) scale(1.1); opacity:1 } }
 
       .lp-float { animation: lp-float 6s ease-in-out infinite; }
       @keyframes lp-float { 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-12px) } }
@@ -576,17 +584,17 @@ function LandingStyles() {
          bottom, contact on top), updated per frame. Bars grow from the centre. */
       .cw { display:flex; align-items:center; gap:2px; height:56px; }
       .cw i { flex:1 1 0; min-width:2px; max-width:6px; height:6%; border-radius:3px; will-change:height;
-        background: linear-gradient(to top, var(--ca, #818cf8) var(--p, 50%), var(--cb, #34d399) var(--p, 50%)); }
+        background: linear-gradient(to top, var(--ca) var(--p, 50%), var(--cb) var(--p, 50%)); }
 
       /* Tiny pulsing dot for an in-flight tool call. */
-      .lp-dot { width:5px; height:5px; border-radius:9999px; background: var(--text-primary); animation: lp-dot 1s ease-in-out infinite; }
+      .lp-dot { width:5px; height:5px; border-radius:9999px; background: var(--color-accent-cyan); animation: lp-dot 1s ease-in-out infinite; }
       @keyframes lp-dot { 0%,100%{ opacity:.3 } 50%{ opacity:1 } }
 
       /* Steady (non-blinking) streaming cursor while a line is being spoken. */
       .lp-caret { display:inline-block; width:2px; height:0.95em; margin-left:2px; vertical-align:-1px; border-radius:1px; opacity:.75; }
 
       @media (prefers-reduced-motion: reduce) {
-        .lp-orb, .lp-float, .lp-dot { animation: none !important; }
+        .lp-glow, .lp-float, .lp-dot { animation: none !important; }
         [data-reveal].reveal { opacity:1 !important; transform:none !important; transition:none !important; }
       }
     `}</style>
