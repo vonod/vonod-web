@@ -387,7 +387,7 @@ export default function LandingPage() {
             <span data-reveal className="reveal badge-pill mb-lg">
               <TrendingUp size={13} /> AI phone campaigns at scale
             </span>
-            <h1 data-reveal className="reveal text-display-lg md:text-display-mega font-medium mb-lg" style={{ transitionDelay: '60ms' }}>
+            <h1 data-reveal className="reveal text-display-md sm:text-display-lg lg:text-display-xl font-medium mb-lg" style={{ transitionDelay: '60ms' }}>
               Dial millions.<br />Not one at a time.
             </h1>
             <p data-reveal className="reveal text-body-md text-body max-w-md mb-xl" style={{ transitionDelay: '120ms' }}>
@@ -468,7 +468,7 @@ export default function LandingPage() {
       {/* ── Features ──────────────────────────────────────────────────── */}
       <section id="features" className="max-w-content mx-auto px-6 py-xxl md:py-section">
         <div data-reveal className="reveal max-w-2xl mb-14">
-          <h2 className="text-display-md md:text-display-xl font-medium mb-base">Built for volume from day one.</h2>
+          <h2 className="text-display-sm sm:text-display-md lg:text-display-xl font-medium mb-base">Built for volume from day one.</h2>
           <p className="text-body text-body-md">Every feature designed to operate at campaign scale — thousands of simultaneous calls, each one individually intelligent.</p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -491,7 +491,7 @@ export default function LandingPage() {
             <span className="inline-flex items-center gap-2 text-caption font-medium text-body mb-4">
               <span className="w-2 h-2 rounded-full bg-success" /> Live call — one of thousands
             </span>
-            <h2 className="text-display-md md:text-display-xl font-medium mb-base">Every call is individual. Every campaign is massive.</h2>
+            <h2 className="text-display-sm sm:text-display-md lg:text-display-xl font-medium mb-base">Every call is individual. Every campaign is massive.</h2>
             <p className="text-body text-body-md mb-lg">
               While your campaign dials thousands, each conversation is an intelligent, context-aware interaction. No scripts. No templates. Every person gets a real conversation, with real branching based on what they say.
             </p>
@@ -508,7 +508,7 @@ export default function LandingPage() {
       {/* ── How it works ──────────────────────────────────────────────── */}
       <section id="how" className="max-w-content mx-auto px-6 py-xxl md:py-section">
         <div data-reveal className="reveal text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-display-md md:text-display-xl font-medium mb-base">From list to launch in minutes.</h2>
+          <h2 className="text-display-sm sm:text-display-md lg:text-display-xl font-medium mb-base">From list to launch in minutes.</h2>
           <p className="text-body text-body-md">Upload your contacts, configure the campaign, and let Vonod dial while you watch the results stream in.</p>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
@@ -526,7 +526,7 @@ export default function LandingPage() {
       <section className="max-w-content mx-auto px-6 pb-24">
         <div data-reveal className="reveal spotlight relative overflow-hidden card px-xl py-xxl md:py-section text-center">
           <div className="relative">
-            <h2 className="text-display-md md:text-display-xl font-medium mb-md">Your first 5,000 calls are one click away.</h2>
+            <h2 className="text-display-sm sm:text-display-md lg:text-display-xl font-medium mb-md">Your first 5,000 calls are one click away.</h2>
             <p className="text-body text-body-md max-w-xl mx-auto mb-xl">
               Upload a list, configure your agent, and launch. No sales call. No demo. No commitment.
             </p>

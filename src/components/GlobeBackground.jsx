@@ -120,7 +120,7 @@ export default function GlobeBackground() {
         },
       });
       // Fade in once the first frame is up (avoids a hard pop).
-      requestAnimationFrame(() => { if (!destroyed) canvas.style.opacity = '1'; });
+      requestAnimationFrame(() => { if (!destroyed) canvas.style.opacity = '0.6'; });
     };
 
     const destroy = () => {

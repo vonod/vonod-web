@@ -113,7 +113,7 @@
 @layer components {
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-md
-           text-button font-medium transition-colors duration-200
+           min-h-10 text-button font-medium transition-colors duration-200
            disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
@@ -140,7 +140,7 @@
 
   /* Sized up for a hero: same tokens, one step of padding larger. */
   .btn-lg {
-    @apply px-lg py-3.5 text-body-md;
+    @apply min-h-11 px-lg py-3.5 text-body-md;
   }
 
   .card {
