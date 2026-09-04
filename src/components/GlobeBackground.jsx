@@ -3,7 +3,9 @@ import { useEffect, useRef } from 'react';
 /**
  * Dotted planet Earth (real continents) used as a hero background, with marker
  * dots pulsing across the globe to evoke a massive, worldwide call campaign.
- * Monochrome, held back behind the hero copy that sits on top of it.
+ * Monochrome, held back behind the hero copy that sits on top of it, and
+ * dropped entirely below lg — on a phone the canvas is wider than the screen
+ * and its markers land under the paragraph.
  *
  * Built on `cobe` (~5 KB, GPU/WebGL) instead of three.js so it (a) actually
  * renders Earth's landmasses out of the box and (b) keeps Lighthouse happy:
@@ -156,7 +158,7 @@ export default function GlobeBackground() {
   }, []);
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+    <div className="hidden lg:block absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
       <canvas
         ref={canvasRef}
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
