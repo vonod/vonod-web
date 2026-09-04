@@ -410,10 +410,10 @@ export default function LandingPage() {
                 <PhoneCall size={17} /> See how it works
               </a>
             </div>
-            <div data-reveal className="reveal flex items-center gap-6 mt-10 text-caption text-body" style={{ transitionDelay: '240ms' }}>
-              <span className="flex items-center gap-1.5"><Check size={14} /> Thousands concurrent</span>
-              <span className="flex items-center gap-1.5"><Check size={14} /> No code</span>
-              <span className="flex items-center gap-1.5"><Check size={14} /> Sub-second per call</span>
+            <div data-reveal className="reveal flex flex-wrap items-center gap-x-6 gap-y-2 mt-10 text-caption text-body" style={{ transitionDelay: '240ms' }}>
+              <span className="flex items-center gap-1.5 whitespace-nowrap"><Check size={14} className="shrink-0" /> Thousands concurrent</span>
+              <span className="flex items-center gap-1.5 whitespace-nowrap"><Check size={14} className="shrink-0" /> No code</span>
+              <span className="flex items-center gap-1.5 whitespace-nowrap"><Check size={14} className="shrink-0" /> Sub-second per call</span>
             </div>
           </div>
 
