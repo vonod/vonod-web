@@ -226,7 +226,7 @@ function LiveTranscript() {
       {/* Header — campaign progress + a single latency badge */}
       <div className="flex items-center gap-2 px-4 py-2.5 border-b border-hairline">
         <span className="w-2 h-2 rounded-full bg-success" />
-        <span className="text-caption font-medium text-body">Live call · 2,417 / 5,000</span>
+        <span className="text-caption font-medium text-body">Call 2,417 of 5,000</span>
         <span className="ml-auto flex items-center gap-2 font-mono text-[0.6875rem] text-body">
           <span className="inline-flex items-center gap-1 text-body-strong"><Zap size={11} /> {AVG_REPLY} reply</span>
           <span>00:14</span>
@@ -342,6 +342,15 @@ const FEATURES = [
   { icon: Timer, title: 'Sub-second at scale', body: 'Under 800 ms turn-taking even at 1,000+ concurrent calls. No degradation as your campaign grows.' },
 ];
 
+// One campaign run, as an illustration rather than a live readout — the
+// band that renders these labels it as such.
+const RUN_STATS = [
+  { v: '312', k: 'Concurrent calls', note: 'Dialing at the same instant, not queued behind each other.' },
+  { v: '38.2%', k: 'Connect rate', note: 'Answered, and held past the opening line.' },
+  { v: '$0.14', k: 'Cost per call', note: 'All-in, on your own provider keys.' },
+  { v: '2h 14m', k: 'Run time', note: 'Launch to the last number on the list.' },
+];
+
 const STEPS = [
   { n: '01', title: 'Upload & segment', body: 'Import your contact list in CSV, segment by time zone, priority, or custom tags. Vonod handles dedup and validation.' },
   { n: '02', title: 'Design your campaign', body: 'Pick the agent, set the opening line, define outcomes, and configure retry logic — all from a single flow.' },
@@ -365,7 +374,7 @@ export default function LandingPage() {
           <div className="hidden md:flex items-center gap-xl text-nav-link text-body">
             <a href="#features" className="hover:text-body-strong transition-colors">Platform</a>
             <a href="#how" className="hover:text-body-strong transition-colors">How it works</a>
-            <a href="#demo" className="hover:text-body-strong transition-colors">Live campaign</a>
+            <a href="#scale" className="hover:text-body-strong transition-colors">At scale</a>
           </div>
           <div className="flex items-center gap-2">
             <a href={APP_URL} className="btn-tertiary px-base py-2.5">Log in</a>
@@ -382,7 +391,7 @@ export default function LandingPage() {
         <div className="lp-glow" aria-hidden="true" />
         <div className="lp-grid" aria-hidden="true" />
         <GlobeBackground />
-        <div className="relative max-w-content mx-auto px-6 pt-xxl pb-xl md:pt-section md:pb-section grid lg:grid-cols-2 gap-12 items-center">
+        <div className="relative max-w-content mx-auto px-6 pt-xxl pb-xl md:pt-section md:pb-section grid lg:grid-cols-[1fr_1.1fr] gap-12 items-center">
           <div>
             <span data-reveal className="reveal badge-pill mb-lg">
               <TrendingUp size={13} /> AI phone campaigns at scale
@@ -397,8 +406,8 @@ export default function LandingPage() {
               <a href={APP_URL} className="btn-primary btn-lg group">
                 Launch your first campaign <ArrowRight size={17} className="group-hover:translate-x-0.5 transition-transform" />
               </a>
-              <a href="#demo" className="btn-outline btn-lg">
-                <PhoneCall size={17} /> See it in action
+              <a href="#how" className="btn-outline btn-lg">
+                <PhoneCall size={17} /> See how it works
               </a>
             </div>
             <div data-reveal className="reveal flex items-center gap-6 mt-10 text-caption text-body" style={{ transitionDelay: '240ms' }}>
@@ -408,49 +417,15 @@ export default function LandingPage() {
             </div>
           </div>
 
+          {/* The product, running, above the fold. A visitor should not have to
+              scroll to find out what Vonod does — they watch an agent take a
+              call, get interrupted, recover, and book the meeting. */}
           <div data-reveal className="reveal relative" style={{ transitionDelay: '160ms' }}>
-            <div className="rounded-xl border border-hairline bg-surface-card shadow-2xl p-6">
-              {/* Campaign header */}
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-11 h-11 rounded-xl bg-primary flex items-center justify-center p-2.5">
-                  <img src={asset('logo_negro_vonod.png')} alt="" className="w-full h-full object-contain" />
-                </div>
-                <div>
-                  <div className="font-medium text-body-sm">Q2 Outreach · Active</div>
-                  <div className="text-caption text-body">1,247 calls completed today</div>
-                </div>
-                <span className="ml-auto text-[0.6875rem] font-medium px-2 py-1 rounded-full bg-success/10 text-success border border-success/25">
-                  Live · 312 concurrent
-                </span>
-              </div>
-              {/* Mini metrics row */}
-              <div className="grid grid-cols-3 gap-2 mb-4">
-                {[
-                  ['Connect', '38.2%'],
-                  ['Booked', '12.7%'],
-                  ['Avg cost', '$0.14'],
-                ].map(([k, v]) => (
-                  <div key={k} className="rounded-xl border border-hairline bg-surface-card/70 py-2 px-2.5 text-center">
-                    <div className="font-mono text-body-sm font-medium">{v}</div>
-                    <div className="text-caption-uppercase uppercase text-body mt-0.5">{k}</div>
-                  </div>
-                ))}
-              </div>
-              {/* Progress bar */}
-              <div className="mb-4">
-                <div className="flex justify-between text-[0.6875rem] text-body mb-1.5">
-                  <span>Progress · 1,247 / 5,000</span>
-                  <span>24.9%</span>
-                </div>
-                <div className="h-1.5 rounded-full bg-surface-card-elevated overflow-hidden">
-                  <div className="h-full w-[24.9%] rounded-full bg-primary transition-all" />
-                </div>
-              </div>
-              <div className="flex items-center justify-between text-[0.6875rem] text-body">
-                <span>Avg turn-around: 0.7s</span>
-                <span>Est. completion: 2h 14m</span>
-              </div>
-            </div>
+            <p className="flex items-center gap-2 mb-2.5 text-caption-uppercase uppercase text-body">
+              <span className="w-1.5 h-1.5 rounded-full bg-success" aria-hidden="true" />
+              Simulated call · one of thousands in a run
+            </p>
+            <LiveTranscript />
           </div>
         </div>
       </section>
@@ -484,13 +459,13 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Live campaign demo ───────────────────────────────────────── */}
-      <section id="demo" className="border-y border-hairline bg-canvas-deep">
+      {/* ── Scale ────────────────────────────────────────
+          The hero shows one call. This band shows what a whole run of them
+          looks like — the numbers the old hero card was faking, set as type
+          and labelled as the illustration they are. */}
+      <section id="scale" className="border-y border-hairline bg-canvas-deep">
         <div className="max-w-content mx-auto px-6 py-xxl md:py-section grid lg:grid-cols-[1fr_1.1fr] gap-12 items-center">
           <div data-reveal className="reveal">
-            <span className="inline-flex items-center gap-2 text-caption font-medium text-body mb-4">
-              <span className="w-2 h-2 rounded-full bg-success" /> Live call — one of thousands
-            </span>
             <h2 className="text-display-sm sm:text-display-md lg:text-display-xl font-medium mb-base">Every call is individual. Every campaign is massive.</h2>
             <p className="text-body text-body-md mb-lg">
               While your campaign dials thousands, each conversation is an intelligent, context-aware interaction. No scripts. No templates. Every person gets a real conversation, with real branching based on what they say.
@@ -499,8 +474,21 @@ export default function LandingPage() {
               Launch a campaign <ChevronRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
             </a>
           </div>
+
           <div data-reveal className="reveal" style={{ transitionDelay: '120ms' }}>
-            <LiveTranscript />
+            <p className="text-caption-uppercase uppercase text-body mb-lg">A typical 5,000-contact run</p>
+            <dl className="grid grid-cols-2 gap-x-12 gap-y-xl">
+              {/* Source order is label → value → note, which is what a screen
+                  reader should hear. `order` flips it visually so the number
+                  leads. */}
+              {RUN_STATS.map(({ v, k, note }) => (
+                <div key={k} className="flex flex-col">
+                  <dt className="order-2 mt-1.5 text-caption-uppercase uppercase text-body-strong">{k}</dt>
+                  <dd className="order-1 font-mono text-display-md lg:text-display-lg font-medium tabular-nums">{v}</dd>
+                  <dd className="order-3 mt-1 text-body-sm text-body">{note}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
       </section>
