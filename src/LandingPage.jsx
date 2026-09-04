@@ -50,13 +50,13 @@ function useReveal() {
   }, []);
 }
 
-// Two voices, two token colours. Both clear 4.5:1 on the card surface, which
-// matters: the speaker name beside each transcript line is 11px. accent-violet
-// would have been the more obvious "AI" colour and is in the token set, but it
-// lands at 3.1:1 on #181818 — too low for text this small.
+// Two voices, told apart by weight rather than hue: the agent is ink, the
+// contact is muted. Colour was never the only signal — every line carries the
+// speaker's name and icon — and both values clear 4.5:1 on the card surface
+// (19:1 and 5:1), which matters at the 11px the speaker label runs at.
 const SPEAKERS = {
-  agent: { name: 'Agent', role: 'AI', color: 'var(--color-accent-cyan)', Icon: Bot },
-  user: { name: 'Marcos', role: 'Contact', color: 'var(--color-semantic-success)', Icon: User },
+  agent: { name: 'Agent', role: 'AI', color: 'var(--color-ink)', Icon: Bot },
+  user: { name: 'Marcos', role: 'Contact', color: 'var(--color-muted)', Icon: User },
 };
 
 // The "call" object — the per-contact input variables this run is fed. The agent
@@ -408,12 +408,12 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div data-reveal className="reveal lp-float relative" style={{ transitionDelay: '160ms' }}>
+          <div data-reveal className="reveal relative" style={{ transitionDelay: '160ms' }}>
             <div className="rounded-xl border border-hairline bg-surface-card shadow-2xl p-6">
               {/* Campaign header */}
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-11 h-11 rounded-xl bg-primary flex items-center justify-center p-2.5">
-                  <img src={asset('logo_blanco_vonod.png')} alt="" className="w-full h-full object-contain" />
+                  <img src={asset('logo_negro_vonod.png')} alt="" className="w-full h-full object-contain" />
                 </div>
                 <div>
                   <div className="font-medium text-body-sm">Q2 Outreach · Active</div>
@@ -495,7 +495,7 @@ export default function LandingPage() {
             <p className="text-body text-body-md mb-lg">
               While your campaign dials thousands, each conversation is an intelligent, context-aware interaction. No scripts. No templates. Every person gets a real conversation, with real branching based on what they say.
             </p>
-            <a href={APP_URL} className="group inline-flex items-center gap-2 font-medium text-body-strong hover:text-accent-cyan transition-colors">
+            <a href={APP_URL} className="group inline-flex items-center gap-2 font-medium text-body-strong underline decoration-hairline-strong underline-offset-4 hover:decoration-ink transition-colors">
               Launch a campaign <ChevronRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
             </a>
           </div>
@@ -557,24 +557,20 @@ function LandingStyles() {
       [data-reveal].reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
       [data-reveal].reveal.in { opacity: 1; transform: none; }
 
-      /* The brand's signature: one deep-electric-blue spotlight bleeding out
-         of the near-black floor, behind the hero. */
+      /* A still wash of light off the near-black floor, behind the hero.
+         It does not pulse — a header that breathes reads as a consumer
+         landing page, and this one is selling to operations teams. */
       .lp-glow { position:absolute; top:-220px; left:50%; transform:translateX(-50%); width:900px; height:760px; pointer-events:none; z-index:0;
         background: radial-gradient(ellipse at center,
-          color-mix(in srgb, var(--color-primary-glow) 30%, transparent) 0%,
-          color-mix(in srgb, var(--color-primary) 18%, transparent) 34%,
+          color-mix(in srgb, var(--color-ink) 9%, transparent) 0%,
+          color-mix(in srgb, var(--color-ink) 4%, transparent) 36%,
           transparent 68%);
-        filter: blur(50px); animation: lp-breathe 9s ease-in-out infinite; }
+        filter: blur(50px); }
       .lp-grid { position:absolute; inset:0; z-index:0; pointer-events:none;
         background-image: linear-gradient(var(--color-hairline) 1px, transparent 1px), linear-gradient(90deg, var(--color-hairline) 1px, transparent 1px);
         background-size: 56px 56px;
         -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 0%, transparent 75%);
         mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 0%, transparent 75%); }
-
-      @keyframes lp-breathe { 0%,100%{ transform:translateX(-50%) scale(1); opacity:.8 } 50%{ transform:translateX(-50%) scale(1.1); opacity:1 } }
-
-      .lp-float { animation: lp-float 6s ease-in-out infinite; }
-      @keyframes lp-float { 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-12px) } }
 
       .lp-line { animation: lp-line .45s cubic-bezier(.2,.7,.2,1) both; }
       @keyframes lp-line { from{ opacity:0; transform:translateY(8px) } to{ opacity:1; transform:none } }
@@ -587,14 +583,14 @@ function LandingStyles() {
         background: linear-gradient(to top, var(--ca) var(--p, 50%), var(--cb) var(--p, 50%)); }
 
       /* Tiny pulsing dot for an in-flight tool call. */
-      .lp-dot { width:5px; height:5px; border-radius:9999px; background: var(--color-accent-cyan); animation: lp-dot 1s ease-in-out infinite; }
+      .lp-dot { width:5px; height:5px; border-radius:9999px; background: var(--color-ink); animation: lp-dot 1s ease-in-out infinite; }
       @keyframes lp-dot { 0%,100%{ opacity:.3 } 50%{ opacity:1 } }
 
       /* Steady (non-blinking) streaming cursor while a line is being spoken. */
       .lp-caret { display:inline-block; width:2px; height:0.95em; margin-left:2px; vertical-align:-1px; border-radius:1px; opacity:.75; }
 
       @media (prefers-reduced-motion: reduce) {
-        .lp-glow, .lp-float, .lp-dot { animation: none !important; }
+        .lp-dot { animation: none !important; }
         [data-reveal].reveal { opacity:1 !important; transform:none !important; transition:none !important; }
       }
     `}</style>

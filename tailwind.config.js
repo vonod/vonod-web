@@ -1,13 +1,14 @@
 /** Vonod marketing site.
  *
- * Tokens follow the Composio style reference (composio.dev) captured by
- * RicoUI: dark canvas, one deep-electric-blue voltage, Inter standing in for
- * abcDiatype. Every value here reads a CSS variable declared in src/index.css
- * so the token set has exactly one home.
+ * Structure from the Composio style reference (composio.dev) captured by
+ * RicoUI — dark canvas, type/spacing/radius scales, control geometry — on
+ * Vonod's own monochrome palette. Every value here reads a CSS variable
+ * declared in src/index.css, so the token set has exactly one home.
  *
- * Naming note: `primary` is the brand BLUE, not the primary text colour.
- * Text is `ink` / `body-strong` / `body` / `muted`. `text-primary` would be
- * #0007cd on a near-black canvas — 1.7:1, invisible. Don't.
+ * Naming note: `primary` is the interaction FILL (white), not the primary
+ * text colour. Text is `ink` / `body-strong` / `body` / `muted`.
+ * `text-primary` on the near-black floor would be white-on-white once it
+ * lands on a filled surface — use `text-ink`.
  */
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
@@ -16,8 +17,8 @@ export default {
       colors: {
         primary: {
           DEFAULT: 'var(--color-primary)',
+          hover: 'var(--color-primary-hover)',
           active: 'var(--color-primary-active)',
-          glow: 'var(--color-primary-glow)',
         },
         ink: 'var(--color-ink)',
         body: 'var(--color-body)',
@@ -41,8 +42,6 @@ export default {
         },
         'surface-strong': 'var(--color-surface-strong)',
         'on-primary': 'var(--color-on-primary)',
-        'accent-cyan': 'var(--color-accent-cyan)',
-        'accent-violet': 'var(--color-accent-violet)',
         error: 'var(--color-semantic-error)',
         success: 'var(--color-semantic-success)',
       },

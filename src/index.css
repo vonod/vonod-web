@@ -3,13 +3,17 @@
 @tailwind utilities;
 
 /* ─────────────────────────────────────────────────────────────────────────
-   Design tokens — Composio style reference (composio.dev), as captured by
-   RicoUI. A dark, technical developer-tools system anchored on a single
-   deep-electric-blue voltage (#0007cd) over a near-black floor, with cards
-   floating on gray-tinted surfaces.
+   Design tokens — the STRUCTURE of the Composio style reference
+   (composio.dev, captured by RicoUI) on Vonod's own monochrome palette.
 
-   Dark only. The reference documents no light palette, and inventing one
-   would mean shipping colours outside the token set.
+   Taken: the dark near-black floor, cards floating on gray-tinted surfaces,
+   the 14-step type scale, the spacing and radius scales, and the component
+   geometry (40px controls, 8px control radius, 16px card radius).
+
+   Not taken: the deep-electric-blue voltage. That one colour IS Composio's
+   identity; Vonod's is monochrome. So `primary` here is white on a near-black
+   floor — the same inversion the app uses — and the only chromatic values
+   left are two semantic indicators, which never appear as fills.
 
    Two deliberate deviations from the captured snapshot, both of which keep
    the rendered result identical at default settings:
@@ -24,12 +28,11 @@
   :root {
     color-scheme: dark;
 
-    /* Brand voltage. Fills only, never text on a dark surface: #0007cd on
-       #0f0f0f is 1.7:1 and unreadable. White on #0007cd is 11:1, which is
-       why the blue only ever appears as a filled surface under white. */
-    --color-primary: #0007cd;
-    --color-primary-active: #0005a3;
-    --color-primary-glow: #1a26ff;
+    /* The interaction fill: white on near-black, dark label on top.
+       19:1 in both directions, and it keeps the page monochromatic. */
+    --color-primary: #ffffff;
+    --color-primary-hover: #e8e8e8;
+    --color-primary-active: #d4d4d4;
 
     /* Text */
     --color-ink: #ffffff;
@@ -50,13 +53,13 @@
     --color-surface-card-elevated: #222222;
     --color-surface-strong: #2a2a2a;
 
-    /* On-colour */
-    --color-on-primary: #ffffff;
+    /* On-colour: the primary fill is white, so its label is the floor. */
+    --color-on-primary: #0f0f0f;
     --color-on-dark: #ffffff;
 
-    /* Accents & semantics */
-    --color-accent-cyan: #00d4ff;
-    --color-accent-violet: #7b3aed;
+    /* The only two chromatic values on the site. Indicators at small sizes —
+       a status dot, a check, one line of notice text — never fills, and never
+       the sole carrier of meaning (each is paired with an icon or a label). */
     --color-semantic-error: #ff4d4d;
     --color-semantic-success: #33d17a;
 
@@ -91,18 +94,18 @@
     font-family: 'abcDiatype', Inter, ui-sans-serif, system-ui, sans-serif;
   }
 
-  /* One visible focus indicator for the whole site. Cyan clears 3:1 against
-     canvas, both card surfaces and the primary blue, so it stays visible
-     wherever a control sits (WCAG 2.4.7 / 1.4.11). */
+  /* One visible focus indicator for the whole site. The 2px offset puts the
+     ring on the dark floor rather than on the control, so a white ring stays
+     visible even around the white primary button (WCAG 2.4.7 / 1.4.11). */
   :focus-visible {
-    outline: 2px solid var(--color-accent-cyan);
+    outline: 2px solid var(--color-ink);
     outline-offset: 2px;
     border-radius: var(--radius-xs);
   }
 
   ::selection {
-    background: var(--color-primary-glow);
-    color: var(--color-on-primary);
+    background: var(--color-ink);
+    color: var(--color-canvas);
   }
 }
 
@@ -121,7 +124,7 @@
   /* height 40px = 10px padding + 20px line box; py-2.5 keeps it exact */
   .btn-primary {
     @apply btn bg-primary text-on-primary px-[18px] py-2.5
-           hover:bg-primary-glow active:bg-primary-active;
+           hover:bg-primary-hover active:bg-primary-active;
   }
 
   .btn-secondary {
@@ -152,8 +155,8 @@
            px-2.5 py-1 text-caption-uppercase uppercase text-body-strong;
   }
 
-  /* The brand's signature: a soft blue spotlight bleeding out of a dark
-     surface. Sits behind content, never over it. */
+  /* A soft light bleeding out of the dark floor. Sits behind content, never
+     over it. Monochrome, so it reads as depth rather than as a colour. */
   .spotlight::before {
     content: '';
     position: absolute;
@@ -165,8 +168,8 @@
     border-radius: var(--radius-pill);
     background: radial-gradient(
       circle,
-      color-mix(in srgb, var(--color-primary-glow) 34%, transparent) 0%,
-      color-mix(in srgb, var(--color-primary) 16%, transparent) 38%,
+      color-mix(in srgb, var(--color-ink) 10%, transparent) 0%,
+      color-mix(in srgb, var(--color-ink) 4%, transparent) 40%,
       transparent 68%
     );
     filter: blur(60px);

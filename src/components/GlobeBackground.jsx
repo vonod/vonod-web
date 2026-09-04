@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 /**
  * Dotted planet Earth (real continents) used as a hero background, with marker
  * dots pulsing across the globe to evoke a massive, worldwide call campaign.
- * Rendered in the brand's blue voltage over the near-black canvas.
+ * Monochrome, held back behind the hero copy that sits on top of it.
  *
  * Built on `cobe` (~5 KB, GPU/WebGL) instead of three.js so it (a) actually
  * renders Earth's landmasses out of the box and (b) keeps Lighthouse happy:
@@ -95,16 +95,15 @@ export default function GlobeBackground() {
         height: px,
         phi: 0,
         theta: 0.22,
-        // The site is dark-only, so the globe is too. Landmasses stay neutral
-        // gray and the campaign markers carry the brand voltage
-        // (--color-primary-glow #1a26ff), with a dim blue atmosphere behind.
+        // Dark-only site, monochrome globe: gray landmasses, white call
+        // markers, a barely-there neutral atmosphere. No hue anywhere.
         dark: 1,
         diffuse: 1.2,
         mapSamples: 16000,
         mapBrightness: 5.5,
-        baseColor: [0.3, 0.3, 0.32],
-        markerColor: [0.102, 0.149, 1],
-        glowColor: [0.08, 0.09, 0.22],
+        baseColor: [0.32, 0.32, 0.34],
+        markerColor: [1, 1, 1],
+        glowColor: [0.13, 0.13, 0.14],
         markers: CITIES.map((location) => ({ location, size: 0.04 })),
         onRender: (state) => {
           if (!reduce) phi += 0.0035;
