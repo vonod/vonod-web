@@ -1,11 +1,14 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Dotted planet Earth (real continents) used as a hero background, with marker
- * dots pulsing across the globe to evoke a massive, worldwide call campaign.
- * Monochrome, held back behind the hero copy that sits on top of it, and
- * dropped entirely below lg — on a phone the canvas is wider than the screen
- * and its markers land under the paragraph.
+ * Dotted planet Earth (real continents) used as the hero's FLOOR, with marker
+ * dots pulsing across it to evoke a massive, worldwide call campaign.
+ *
+ * It sits sunk below the copy rather than behind it. Behind the copy it lost
+ * the fight with the outlined half of the headline — a 1.5px white stroke over
+ * white dots is noise — so the sphere is dropped until only its top arc clears
+ * the hero's bottom edge, and a mask fades even that up out of the black. It
+ * touches no letter, and "everyone" gets the curve of the planet underneath it.
  *
  * Built on `cobe` (~5 KB, GPU/WebGL) instead of three.js so it (a) actually
  * renders Earth's landmasses out of the box and (b) keeps Lighthouse happy:
@@ -53,6 +56,17 @@ const CITIES = [
   [-33.87, 151.21], [-37.81, 144.96], [-31.95, 115.86], [-27.47, 153.03], [-36.85, 174.76],
 ];
 
+// Where the sphere sits, all as fractions of its own diameter so the horizon
+// holds its shape at every viewport width.
+//
+// ARC is how much of the top clears the hero's bottom edge; the mask then
+// hides everything above MASK_CLEAR and is at full strength by MASK_SOLID. The
+// band that actually shows is therefore 14.5%–21% down the sphere — far enough
+// from the pole to carry continents, close enough to the top to still read as
+// a curve rather than a stripe. Showing the polar cap instead looks empty.
+const ARC = 0.21;
+const MASK = 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 14.5%, rgba(0,0,0,1) 21%)';
+
 export default function GlobeBackground() {
   const canvasRef = useRef(null);
 
@@ -77,11 +91,17 @@ export default function GlobeBackground() {
 
     const measure = () => {
       const w = parent?.offsetWidth || window.innerWidth;
-      const h = parent?.offsetHeight || 560;
-      // Big enough to read as a planet, capped so buffers stay modest.
-      size = Math.min(Math.max(w, h) * 1.1, 1000);
+      // Big enough to read as a planet, capped so buffers stay modest. Only
+      // the ARC band is ever on screen, so there is nothing to gain from a
+      // sphere much wider than the viewport.
+      // The floor is 720 so the arc still reads as a curve on a phone: at a
+      // 390px viewport a sphere scaled to the viewport would show a dome barely
+      // 60px tall, which looks like a smudge rather than a planet.
+      size = Math.min(Math.max(w * 1.15, 720), 1400);
       canvas.style.width = `${size}px`;
       canvas.style.height = `${size}px`;
+      // Sink it so only that band clears the hero's bottom edge.
+      canvas.style.bottom = `${-size * (1 - ARC)}px`;
     };
 
     const create = async () => {
@@ -89,7 +109,7 @@ export default function GlobeBackground() {
       const { default: createGlobe } = await import('cobe');
       if (destroyed) return;
       measure();
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const dpr = Math.min(1.5, window.devicePixelRatio || 1);
       const px = size * dpr;
       globe = createGlobe(canvas, {
         devicePixelRatio: dpr,
@@ -121,7 +141,7 @@ export default function GlobeBackground() {
         },
       });
       // Fade in once the first frame is up (avoids a hard pop).
-      requestAnimationFrame(() => { if (!destroyed) canvas.style.opacity = '0.6'; });
+      requestAnimationFrame(() => { if (!destroyed) canvas.style.opacity = '0.85'; });
     };
 
     const destroy = () => {
@@ -138,7 +158,11 @@ export default function GlobeBackground() {
       },
       { rootMargin: '120px' },
     );
-    io.observe(canvas);
+    // Observe the WRAPPER, not the canvas: `contain: strict` plus a size that
+    // is only set once create() runs leaves the canvas 0x0, and a zero-area
+    // element never reports as intersecting — so observing it here meant the
+    // globe intermittently never started at all.
+    io.observe(parent ?? canvas);
 
     let resizeT;
     const onResize = () => {
@@ -158,15 +182,19 @@ export default function GlobeBackground() {
   }, []);
 
   return (
-    <div className="hidden lg:block absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
       <canvas
         ref={canvasRef}
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+        className="absolute left-1/2 -translate-x-1/2"
         style={{
           opacity: 0,
           transition: 'opacity 1.1s ease',
           contain: 'strict',   // isolate the bg canvas from layout/paint
           maxWidth: 'none',
+          // Fade the arc up out of the floor. Without this the sphere starts
+          // on a hard edge and the dots collide with the copy above it.
+          WebkitMaskImage: MASK,
+          maskImage: MASK,
         }}
       />
     </div>

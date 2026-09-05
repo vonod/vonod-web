@@ -1,23 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   Radio, Globe, Gauge, Target, Group, Timer,
-  ArrowRight, Check, PhoneCall, ChevronRight, TrendingUp, Zap, Bot, User,
+  ArrowRight, Check, ChevronRight, Zap, Bot, User,
   CalendarCheck, Database, MessageSquare,
 } from 'lucide-react';
 import GlobeBackground from './components/GlobeBackground';
 
 /**
  * Vonod marketing landing — standalone static site (its own app, decoupled from
- * the platform). Styled on the Composio design system captured by RicoUI:
- * dark-only, near-black canvas, one deep-electric-blue voltage used as a fill
- * and as the spotlight glow behind the hero. Type, spacing and radii come from
- * that token set (see index.css / tailwind.config.js) — no raw hex here beyond
- * the two transcript speaker colours, which are token values passed to inline
- * styles because they also drive a CSS gradient.
+ * the platform). Structure from the Composio design system captured by RicoUI
+ * on Vonod's own monochrome palette: dark-only, near-black canvas. Type,
+ * spacing and radii come from that token set (see index.css /
+ * tailwind.config.js) — no raw hex here beyond the two transcript speaker
+ * colours, which are token values passed to inline styles because they also
+ * drive a CSS gradient.
  *
- * Elevated but cheap: blue spotlight + 3D dot globe, a self-typing
- * live-transcript demo, scroll-reveal sections. CSS-only motion, disabled
- * under prefers-reduced-motion. CTAs point at the app (VITE_APP_URL).
+ * The hero is type and one button, nothing else: the claim at the largest size
+ * on the page, with the dot globe sunk beneath it as a horizon. The product
+ * demo is the section straight after, so the evidence is one scroll away
+ * rather than competing with the headline. CSS-only motion, disabled under
+ * prefers-reduced-motion. CTAs point at the app (VITE_APP_URL).
  *
  * The entire page sells one thing: massive phone campaigns at scale.
  * Not "agents." Campaigns. Volume. Concurrency. Outcomes.
@@ -386,46 +388,44 @@ export default function LandingPage() {
         </nav>
       </header>
 
-      {/* ── Hero ──────────────────────────────────────────────────────── */}
-      <section className="relative">
+      {/* ── Hero ──────────────────────────────────────────────────────────
+          No product above the fold: the claim, at the largest size on the
+          page, and one button. The two halves of the pitch are carried by the
+          type itself — "Call everyone." solid is the volume, "Personally." in
+          outline is the individual. The globe is the floor, not the backdrop
+          (see GlobeBackground), so nothing sits on top of the copy. */}
+      {/* The globe is anchored to this section's bottom edge, so the section
+          has to end where the first screen does — otherwise the horizon
+          scrolls off below the fold. 4rem is the nav. */}
+      <section className="relative overflow-hidden flex min-h-[calc(100svh-4rem)]">
         <div className="lp-glow" aria-hidden="true" />
-        <div className="lp-grid" aria-hidden="true" />
         <GlobeBackground />
-        <div className="relative max-w-content mx-auto px-6 pt-xxl pb-xl md:pt-section md:pb-section grid lg:grid-cols-[1fr_1.1fr] gap-12 items-center">
-          <div>
-            <span data-reveal className="reveal badge-pill mb-lg">
-              <TrendingUp size={13} /> AI phone campaigns at scale
-            </span>
-            <h1 data-reveal className="reveal text-display-md sm:text-display-lg lg:text-display-xl font-medium mb-lg" style={{ transitionDelay: '60ms' }}>
-              Dial millions.<br />Not one at a time.
-            </h1>
-            <p data-reveal className="reveal text-body-md text-body max-w-md mb-xl" style={{ transitionDelay: '120ms' }}>
-              Vonod runs massive outbound phone campaigns — thousands of concurrent AI-powered calls, with the intelligence to handle each conversation individually.
-            </p>
-            <div data-reveal className="reveal flex flex-wrap items-center gap-3" style={{ transitionDelay: '180ms' }}>
-              <a href={APP_URL} className="btn-primary btn-lg group">
-                Launch your first campaign <ArrowRight size={17} className="group-hover:translate-x-0.5 transition-transform" />
-              </a>
-              <a href="#how" className="btn-outline btn-lg">
-                <PhoneCall size={17} /> See how it works
-              </a>
-            </div>
-            <div data-reveal className="reveal flex flex-wrap items-center gap-x-6 gap-y-2 mt-10 text-caption text-body" style={{ transitionDelay: '240ms' }}>
-              <span className="flex items-center gap-1.5 whitespace-nowrap"><Check size={14} className="shrink-0" /> Thousands concurrent</span>
-              <span className="flex items-center gap-1.5 whitespace-nowrap"><Check size={14} className="shrink-0" /> No code</span>
-              <span className="flex items-center gap-1.5 whitespace-nowrap"><Check size={14} className="shrink-0" /> Sub-second per call</span>
-            </div>
+        <div className="relative z-10 w-full max-w-content mx-auto px-6 pt-xxl pb-section md:py-xxl flex flex-col items-center justify-center text-center">
+          <div data-reveal className="reveal flex items-center gap-3 mb-xl">
+            <span className="w-7 h-px bg-hairline-strong" aria-hidden="true" />
+            <span className="text-caption-uppercase uppercase text-muted">AI phone campaigns</span>
+            <span className="w-7 h-px bg-hairline-strong" aria-hidden="true" />
           </div>
 
-          {/* The product, running, above the fold. A visitor should not have to
-              scroll to find out what Vonod does — they watch an agent take a
-              call, get interrupted, recover, and book the meeting. */}
-          <div data-reveal className="reveal relative" style={{ transitionDelay: '160ms' }}>
-            <p className="flex items-center gap-2 mb-2.5 text-caption-uppercase uppercase text-body">
-              <span className="w-1.5 h-1.5 rounded-full bg-success" aria-hidden="true" />
-              Simulated call · one of thousands in a run
-            </p>
-            <LiveTranscript />
+          <h1 data-reveal className="reveal font-medium mb-xl text-display-lg sm:text-display-xl md:text-[5.5rem] lg:text-[8.75rem] leading-[1.05] tracking-[-0.03em]" style={{ transitionDelay: '60ms' }}>
+            <span className="block">Call everyone.</span>
+            {/* Outlined, not transparent: the surface-card-elevated fill means
+                that if the stroke fails to paint anywhere, the word degrades to
+                a dark embossed one instead of vanishing outright. */}
+            <span className="block text-surface-card-elevated lp-outline">Personally.</span>
+          </h1>
+
+          <p data-reveal className="reveal text-title-md text-body max-w-[40rem] mb-xxl text-pretty" style={{ transitionDelay: '120ms' }}>
+            Vonod dials thousands of numbers at once and holds a real conversation on every one — it listens, handles the interruption, and books the meeting itself.
+          </p>
+
+          <div data-reveal className="reveal flex flex-col items-center gap-base" style={{ transitionDelay: '180ms' }}>
+            <a href={APP_URL} className="btn-primary btn-lg group">
+              Launch your first campaign <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
+            </a>
+            <a href="#how" className="group inline-flex items-center gap-1.5 text-nav-link text-body hover:text-body-strong transition-colors">
+              or see how it works <ChevronRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
+            </a>
           </div>
         </div>
       </section>
@@ -437,6 +437,20 @@ export default function LandingPage() {
           {['OpenAI', 'Anthropic', 'Deepgram', 'ElevenLabs', 'Twilio', 'SIP'].map((b) => (
             <span key={b} className="font-mono text-body-strong/80">{b}</span>
           ))}
+        </div>
+      </section>
+
+      {/* ── The product ───────────────────────────────────────────────────
+          The hero makes the claim; this is the evidence, one section below the
+          fold. A visitor watches an agent take a call, get interrupted,
+          recover, and book the meeting. */}
+      <section className="max-w-content mx-auto px-6 py-xxl md:py-section">
+        <div data-reveal className="reveal max-w-[46rem] mx-auto">
+          <p className="flex items-center justify-center gap-2 mb-lg text-caption-uppercase uppercase text-body">
+            <span className="w-1.5 h-1.5 rounded-full bg-success" aria-hidden="true" />
+            Simulated call · one of thousands in a run
+          </p>
+          <LiveTranscript />
         </div>
       </section>
 
@@ -554,11 +568,11 @@ function LandingStyles() {
           color-mix(in srgb, var(--color-ink) 4%, transparent) 36%,
           transparent 68%);
         filter: blur(50px); }
-      .lp-grid { position:absolute; inset:0; z-index:0; pointer-events:none;
-        background-image: linear-gradient(var(--color-hairline) 1px, transparent 1px), linear-gradient(90deg, var(--color-hairline) 1px, transparent 1px);
-        background-size: 56px 56px;
-        -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 0%, transparent 75%);
-        mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 0%, transparent 75%); }
+
+      /* The outlined half of the headline. The fill is surface-card-elevated,
+         not transparent, so the word degrades to a dark embossed one rather
+         than disappearing if a renderer ever drops the stroke. */
+      .lp-outline { -webkit-text-stroke: 1.5px var(--color-ink); }
 
       .lp-line { animation: lp-line .45s cubic-bezier(.2,.7,.2,1) both; }
       @keyframes lp-line { from{ opacity:0; transform:translateY(8px) } to{ opacity:1; transform:none } }
