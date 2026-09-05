@@ -21,8 +21,13 @@ import GlobeBackground from './components/GlobeBackground';
  * rather than competing with the headline. CSS-only motion, disabled under
  * prefers-reduced-motion. CTAs point at the app (VITE_APP_URL).
  *
- * The entire page sells one thing: massive phone campaigns at scale.
- * Not "agents." Campaigns. Volume. Concurrency. Outcomes.
+ * MESSAGING.md is the source of truth for the copy. The short version: this
+ * page no longer sells "an AI phone-calling company" — it sells the billing
+ * wedge (you pay for the orchestration, never a markup on the AI), with
+ * campaign scale as the proof, not the pitch. Every other competitor in this
+ * space can also say "thousands of concurrent calls"; almost none of them
+ * can say "we never touch your AI bill." That line should be legible within
+ * the first screen — see the hero H1/subhead below and MESSAGING.md §1, §3.
  */
 
 const APP_URL = import.meta.env.VITE_APP_URL || 'https://vonod-frontend.fly.dev';
@@ -353,9 +358,16 @@ const RUN_STATS = [
   { v: '2h 14m', k: 'Run time', note: 'Launch to the last number on the list.' },
 ];
 
+// Step 02 names the BYOK step explicitly rather than leaving it implied.
+// MESSAGING.md §1: BYOK is a differentiator AND an onboarding tax, and a
+// visitor who has to open four provider accounts before their first call
+// should read that here, not discover it after signing up. No time estimate
+// ("about ten minutes") is given — that number was never measured and
+// MESSAGING.md §4 is explicit that an unmeasured specific figure does more
+// damage than good once someone asks where it came from.
 const STEPS = [
   { n: '01', title: 'Upload & segment', body: 'Import your contact list in CSV, segment by time zone, priority, or custom tags. Vonod handles dedup and validation.' },
-  { n: '02', title: 'Design your campaign', body: 'Pick the agent, set the opening line, define outcomes, and configure retry logic — all from a single flow.' },
+  { n: '02', title: 'Bring your keys, design your campaign', body: 'Connect your own OpenAI, Deepgram, ElevenLabs, and Twilio keys — once. Then pick the agent, set the opening line, and define outcomes, all from a single flow.' },
   { n: '03', title: 'Launch at scale', body: 'Hit go. Thousands of concurrent calls, each one an individual conversation. Watch outcomes stream live.' },
 ];
 
@@ -391,9 +403,13 @@ export default function LandingPage() {
       {/* ── Hero ──────────────────────────────────────────────────────────
           No product above the fold: the claim, at the largest size on the
           page, and one button. The two halves of the pitch are carried by the
-          type itself — "Call everyone." solid is the volume, "Personally." in
-          outline is the individual. The globe is the floor, not the backdrop
-          (see GlobeBackground), so nothing sits on top of the copy. */}
+          type itself — "Dial thousands." solid is the volume claim every
+          competitor also makes, "Zero AI markup." in outline is the one line
+          almost none of them can copy without changing their own business
+          model (MESSAGING.md §1, §3, §4 — this replaces "Call everyone.
+          Personally.", which read well but said nothing about billing). The
+          globe is the floor, not the backdrop (see GlobeBackground), so
+          nothing sits on top of the copy. */}
       {/* The globe is anchored to this section's bottom edge, so the section
           has to end where the first screen does — otherwise the horizon
           scrolls off below the fold. 4rem is the nav. */}
@@ -401,22 +417,25 @@ export default function LandingPage() {
         <div className="lp-glow" aria-hidden="true" />
         <GlobeBackground />
         <div className="relative z-10 w-full max-w-content mx-auto px-6 pt-xxl pb-section md:py-xxl flex flex-col items-center justify-center text-center">
+          {/* Matches the primary search phrase in index.html's <title> and
+              <meta name="description"> verbatim (MESSAGING.md §6), so the
+              term a visitor searched for is the first thing they read here. */}
           <div data-reveal className="reveal flex items-center gap-3 mb-xl">
             <span className="w-7 h-px bg-hairline-strong" aria-hidden="true" />
-            <span className="text-caption-uppercase uppercase text-muted">AI phone campaigns</span>
+            <span className="text-caption-uppercase uppercase text-muted">AI calling campaigns</span>
             <span className="w-7 h-px bg-hairline-strong" aria-hidden="true" />
           </div>
 
           <h1 data-reveal className="reveal font-medium mb-xl text-display-lg sm:text-display-xl md:text-[5.5rem] lg:text-[8.75rem] leading-[1.05] tracking-[-0.03em]" style={{ transitionDelay: '60ms' }}>
-            <span className="block">Call everyone.</span>
+            <span className="block">Dial thousands.</span>
             {/* Outlined, not transparent: the surface-card-elevated fill means
                 that if the stroke fails to paint anywhere, the word degrades to
                 a dark embossed one instead of vanishing outright. */}
-            <span className="block text-surface-card-elevated lp-outline">Personally.</span>
+            <span className="block text-surface-card-elevated lp-outline">Zero AI markup.</span>
           </h1>
 
           <p data-reveal className="reveal text-title-md text-body max-w-[40rem] mb-xxl text-pretty" style={{ transitionDelay: '120ms' }}>
-            Vonod dials thousands of numbers at once and holds a real conversation on every one — it listens, handles the interruption, and books the meeting itself.
+            Vonod dials thousands of numbers at once. Bring your own OpenAI, Deepgram, ElevenLabs, and Twilio keys — we never mark up a token, a minute, or a call.
           </p>
 
           <div data-reveal className="reveal flex flex-col items-center gap-base" style={{ transitionDelay: '180ms' }}>
@@ -430,10 +449,14 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Trust strip ───────────────────────────────────────────────── */}
+      {/* ── Trust strip ─────────────────────────────────────────────────
+          Was "Runs on your stack" — an integration list, which undersold the
+          fact that these logos are the whole BYOK claim. Reframed per
+          MESSAGING.md §5 point 2: not a logo wall, proof of "your keys, your
+          bill." */}
       <section className="border-y border-hairline bg-canvas-deep">
         <div className="max-w-content mx-auto px-6 py-6 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-caption font-medium text-body">
-          <span className="uppercase tracking-widest text-[0.625rem]">Runs on your stack</span>
+          <span className="uppercase tracking-widest text-[0.625rem]">Your keys, your bill —</span>
           {['OpenAI', 'Anthropic', 'Deepgram', 'ElevenLabs', 'Twilio', 'SIP'].map((b) => (
             <span key={b} className="font-mono text-body-strong/80">{b}</span>
           ))}
@@ -539,14 +562,21 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Footer ────────────────────────────────────────────────────── */}
+      {/* ── Footer ─────────────────────────────────────────────────────
+          The OSS line was entirely absent from the page before this — added
+          per MESSAGING.md §3/§5: secondary to the billing wedge, so it earns
+          a footer line rather than a section, but it answers "can I trust
+          and audit this" for the segment who asks that question first. The
+          old copyright tagline ("AI phone campaigns at scale") was the
+          narrow feature-category framing §1 replaces. */}
       <footer className="border-t border-hairline">
         <div className="max-w-content mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-body-sm text-body">
           <div className="flex items-center gap-2.5">
             <img src={asset('logo_blanco_vonod.png')} alt="" className="w-6 h-6 object-contain" />
             <span className="font-medium text-body-strong">Vonod</span>
           </div>
-          <p>© {new Date().getFullYear()} Vonod. AI phone campaigns at scale.</p>
+          <p>Self-hostable, AGPL-3.0 — audit the code or run it yourself.</p>
+          <p>© {new Date().getFullYear()} Vonod. Orchestration for AI agent campaigns.</p>
         </div>
       </footer>
     </div>

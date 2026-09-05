@@ -142,23 +142,34 @@ Three candidates that carry both halves of the pitch:
 
 | | H1 | Carries | Cost |
 |---|---|---|---|
-| **A** | Call everyone. Personally. | Scale + the individual conversation | Says nothing about billing. Currently shipping — see the conflict note below. |
-| **B** | Thousands of calls. None of them billed by us. | Scale + the wedge, in one breath | "Billed by us" needs the subhead immediately to avoid reading as "it's free" |
-| **C** | Your campaigns. Your API keys. Our infrastructure. | The wedge, explicitly | Loses the scale claim; more rational than emotional |
+| A | Call everyone. Personally. | Scale + the individual conversation | Says nothing about billing. |
+| **B** | Dial thousands. Zero AI markup. *(shipped, see below)* | Scale + the wedge, in one breath | Needed the subhead immediately, to say the AI still costs money — it's the markup that's zero, not the AI |
+| C | Your campaigns. Your API keys. Our infrastructure. | The wedge, explicitly | Loses the scale claim; more rational than emotional |
 
-Recommendation: **B**, with the subhead doing the disambiguating work —
-*"Vonod dials thousands of numbers at once. The AI is yours: bring your own
-OpenAI, Deepgram, ElevenLabs and Twilio keys and we never mark up a token, a
-minute or a call."*
+**Shipped, `src/LandingPage.jsx`:** candidate B, trimmed from the literal
+"Thousands of calls. None of them billed by us." — at the hero's display size
+that line wraps to a second line and pushes the section past one screen
+(verified in-browser; `min-h-[calc(100svh-4rem)]` then clips). "Dial
+thousands." keeps the verb the site used before this pass and matches "Call
+everyone."'s length, so it holds the one-line-per-half layout the outlined
+second line depends on.
 
-Eyebrow: `AI calling campaigns · zero markup on AI`.
+Eyebrow shipped as `AI calling campaigns` — this matches the primary search
+phrase (§6) rather than repeating "zero markup" a second time right above a
+headline that already says it.
 
-> **Conflict to resolve.** PR #1 (`redesign/hero`) ships candidate A. It is a
-> better *hero* than what it replaced, but it does not carry the billing wedge
-> that §3 ranks first. Either merge A and add the wedge as the band directly
-> under it, or hold A and re-cut the H1 as B. Do not merge A and then quietly
-> leave the wedge in the trust strip — that is the state this document exists
-> to fix.
+Subhead shipped: *"Vonod dials thousands of numbers at once. Bring your own
+OpenAI, Deepgram, ElevenLabs, and Twilio keys — we never mark up a token, a
+minute, or a call."* — the disambiguating clause moved earlier than the
+original draft, since "Zero AI markup" alone in the H1 has one extra beat
+before a reader learns markup ≠ cost.
+
+> **Conflict resolved.** PR #1 (`redesign/hero`) shipped candidate A without
+> the billing wedge — exactly the state this document existed to flag. This
+> pass re-cut the H1 to B directly on top of PR #1's layout fixes (the globe
+> horizon, the mobile visibility fix), rather than merging A and patching the
+> wedge in underneath it. If PR #1 merges to `main` before this branch does,
+> rebase; don't let A go live and leave this branch stale.
 
 ---
 
@@ -167,16 +178,22 @@ Eyebrow: `AI calling campaigns · zero markup on AI`.
 Priority order for a first-time visitor:
 
 1. **Hero** — what it does (AI calling campaigns at scale) and the billing wedge
-   (pay for infrastructure, not AI) in one breath.
+   (pay for infrastructure, not AI) in one breath. **Shipped**: §4.
 2. **Trust strip** — proof the BYOK claim is real. Frame the provider logos as
-   *"your keys, your bill"*, not as a logo wall. Today the strip says "Runs on
-   your stack", which reads as an integration list rather than a pricing claim.
+   *"your keys, your bill"*, not as a logo wall. **Shipped** — the strip read
+   "Runs on your stack" (an integration list) and now reads "Your keys, your
+   bill —" ahead of the same provider names.
 3. **Features** — scale, concurrency, campaign tooling. Already good. This is
-   proof, not the pitch.
-4. **Live demo** — strong as-is. Keep the "simulated" label.
-5. **How it works** — unchanged. Good place for the BYOK-effort answer from §1.
-6. **OSS / self-host** — absent today. Add a footer line or short section:
-   *"Self-hostable, AGPL-3.0 — audit the code or run it yourself."*
+   proof, not the pitch. Untouched.
+4. **Live demo** — strong as-is. Keep the "simulated" label. Untouched.
+5. **How it works** — the BYOK-effort answer from §1's objection now lives
+   here: step 02 is retitled "Bring your keys, design your campaign" and its
+   body names the four providers explicitly, rather than leaving key-setup
+   implied inside "configure the campaign."
+6. **OSS / self-host** — was absent. **Shipped** as a footer line: "Self-
+   hostable, AGPL-3.0 — audit the code or run it yourself." A dedicated
+   section is still on the table if OSS gets promoted past "secondary" (§3,
+   §7) — a footer line is the right weight for where it stands today.
 
 ---
 
@@ -252,8 +269,13 @@ Editorial — I have made a provisional call, override if you disagree:
 
 - [x] Primary search phrase: **"AI calling campaigns"** (§6). Shipped.
 - [x] Title, description, OG and Twitter tags (§6). Shipped.
-- [ ] Hero H1: recommendation is **B** (§4), which conflicts with what PR #1
-      ships. Needs your call before either merges.
+- [x] Hero H1, eyebrow and subhead: shipped as candidate B, trimmed for one
+      line per half (§4). Reasonable to revert if you'd rather ship A (PR #1)
+      as-is and take the billing wedge as a loss on the hero specifically —
+      but that reopens the exact gap §3 flags as differentiator #1.
+- [x] Trust strip reframed to "Your keys, your bill —" (§5).
+- [x] BYOK effort named in "How it works" step 02 (§1, §5).
+- [x] OSS footer line added (§5).
 
 Commercial — these are yours, and copy is blocked on them:
 
