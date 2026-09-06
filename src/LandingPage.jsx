@@ -22,12 +22,13 @@ import GlobeBackground from './components/GlobeBackground';
  * prefers-reduced-motion. CTAs point at the app (VITE_APP_URL).
  *
  * MESSAGING.md is the source of truth for the copy. The short version: this
- * page no longer sells "an AI phone-calling company" — it sells the billing
- * wedge (you pay for the orchestration, never a markup on the AI), with
- * campaign scale as the proof, not the pitch. Every other competitor in this
- * space can also say "thousands of concurrent calls"; almost none of them
- * can say "we never touch your AI bill." That line should be legible within
- * the first screen — see the hero H1/subhead below and MESSAGING.md §1, §3.
+ * page no longer sells "an AI phone-calling company" — it sells deployable
+ * voice agents (the agent is the unit; campaigns, inbound support, whatever
+ * the workload is, are things you do with one, not the definition of the
+ * product) and pushes toward trying that immediately, not toward reading
+ * about it. The billing wedge (you pay for the orchestration, never a markup
+ * on the AI) is still stated up front, in the subhead rather than the H1 —
+ * see MESSAGING.md §1, §3, §4 for how that trade-off got made.
  */
 
 const APP_URL = import.meta.env.VITE_APP_URL || 'https://vonod-frontend.fly.dev';
@@ -432,14 +433,19 @@ export default function LandingPage() {
 
       {/* ── Hero ──────────────────────────────────────────────────────────
           No product above the fold: the claim, at the largest size on the
-          page, and one button. The two halves of the pitch are carried by the
-          type itself — "Dial thousands." solid is the volume claim every
-          competitor also makes, "Zero AI markup." in outline is the one line
-          almost none of them can copy without changing their own business
-          model (MESSAGING.md §1, §3, §4 — this replaces "Call everyone.
-          Personally.", which read well but said nothing about billing). The
-          globe is the floor, not the backdrop (see GlobeBackground), so
-          nothing sits on top of the copy. */}
+          page, and one button. "Deploy agents." solid is the product — the
+          agent is the unit that gets built and deployed, campaigns are one
+          thing you do with it, not the definition (a visitor who builds for
+          inbound support shouldn't feel talked past). "No demo needed." in
+          outline is the CTA-forward point this round of copy landed on:
+          the page shouldn't read as something you browse, it should push
+          straight at "launch your first campaign and see if you like it" —
+          which is also why the billing wedge ("Zero AI markup.", the
+          previous H1) moved down into the subhead rather than staying the
+          headline; it's still stated, just not the loudest thing on screen
+          (MESSAGING.md §4 flags that trade-off explicitly). The globe is the
+          floor, not the backdrop (see GlobeBackground), so nothing sits on
+          top of the copy. */}
       {/* The globe is anchored to this section's bottom edge, so the section
           has to end where the first screen does — otherwise the horizon
           scrolls off below the fold. 4rem is the nav. */}
@@ -452,20 +458,20 @@ export default function LandingPage() {
               term a visitor searched for is the first thing they read here. */}
           <div data-reveal className="reveal flex items-center gap-3 mb-xl">
             <span className="w-7 h-px bg-hairline-strong" aria-hidden="true" />
-            <span className="text-caption-uppercase uppercase text-muted">AI calling campaigns</span>
+            <span className="text-caption-uppercase uppercase text-muted">AI phone agents</span>
             <span className="w-7 h-px bg-hairline-strong" aria-hidden="true" />
           </div>
 
           <h1 data-reveal className="reveal font-medium mb-xl text-display-lg sm:text-display-xl md:text-[5.5rem] lg:text-[8.75rem] leading-[1.05] tracking-[-0.03em]" style={{ transitionDelay: '60ms' }}>
-            <span className="block">Dial thousands.</span>
+            <span className="block">Deploy agents.</span>
             {/* Outlined, not transparent: the surface-card-elevated fill means
                 that if the stroke fails to paint anywhere, the word degrades to
                 a dark embossed one instead of vanishing outright. */}
-            <span className="block text-surface-card-elevated lp-outline">Zero AI markup.</span>
+            <span className="block text-surface-card-elevated lp-outline">No demo needed.</span>
           </h1>
 
           <p data-reveal className="reveal text-title-md text-body max-w-[40rem] mb-xxl text-pretty" style={{ transitionDelay: '120ms' }}>
-            Vonod dials thousands of numbers at once. Bring your own OpenAI, Deepgram, ElevenLabs, and Twilio keys — we never mark up a token, a minute, or a call.
+            Vonod deploys the voice agents behind your campaigns — inbound and outbound, at scale. Bring your own OpenAI, Deepgram, ElevenLabs, and Twilio keys. No demo. No sales call. No markup on the AI.
           </p>
 
           <div data-reveal className="reveal flex flex-col items-center gap-base" style={{ transitionDelay: '180ms' }}>

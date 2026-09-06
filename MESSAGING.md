@@ -138,38 +138,58 @@ The doc that preceded this one proposed *"Run outreach at scale. Pay for the
 system, not the AI."* It is two imperatives bolted together and "the system" is
 vague — it should not ship as-is.
 
-Three candidates that carry both halves of the pitch:
+This went through several rounds with the founder before landing — worth
+recording why, since the reasoning is easy to lose and the next person to
+touch this hero will otherwise re-litigate it from scratch.
 
-| | H1 | Carries | Cost |
-|---|---|---|---|
-| A | Call everyone. Personally. | Scale + the individual conversation | Says nothing about billing. |
-| **B** | Dial thousands. Zero AI markup. *(shipped, see below)* | Scale + the wedge, in one breath | Needed the subhead immediately, to say the AI still costs money — it's the markup that's zero, not the AI |
-| C | Your campaigns. Your API keys. Our infrastructure. | The wedge, explicitly | Loses the scale claim; more rational than emotional |
+Candidates tried, roughly in order:
 
-**Shipped, `src/LandingPage.jsx`:** candidate B, trimmed from the literal
-"Thousands of calls. None of them billed by us." — at the hero's display size
-that line wraps to a second line and pushes the section past one screen
-(verified in-browser; `min-h-[calc(100svh-4rem)]` then clips). "Dial
-thousands." keeps the verb the site used before this pass and matches "Call
-everyone."'s length, so it holds the one-line-per-half layout the outlined
-second line depends on.
+| | H1 | Dropped because |
+|---|---|---|
+| | Call everyone. Personally. (PR #1's version) | Said nothing about billing — the gap this doc exists to flag. |
+| | Dial thousands. Zero AI markup. | Still framed the product as *calls*, and specifically *outbound* calls — excludes inbound, which is a real, shipped capability, not a roadmap item. |
+| | Campaigns, not calls. / Run campaigns. / Scale campaigns. | Same problem from the other side: "campaign" is an outbound-coded word in ordinary usage (email campaign, ad campaign) — no phrasing rescues it, because a visitor who's building an inbound line reads "campaign" and assumes this isn't for them. |
+| | Calls in. Calls out. / Every call. | Fixes the direction problem but re-centers everything on "the call" as the unit, when the actual unit of the product is the **agent** — campaigns, inbound support, whatever the workload is, are things you build with one, not the definition of it. |
+| | Your AI. We run it. | Factually wrong. Vonod doesn't run the customer's AI — the model runs on the provider's infrastructure, on the customer's own key. Vonod deploys and orchestrates the agent. Close phrasing, wrong verb. |
 
-Eyebrow shipped as `AI calling campaigns` — this matches the primary search
-phrase (§6) rather than repeating "zero markup" a second time right above a
-headline that already says it.
+**Shipped, `src/LandingPage.jsx`:**
 
-Subhead shipped: *"Vonod dials thousands of numbers at once. Bring your own
-OpenAI, Deepgram, ElevenLabs, and Twilio keys — we never mark up a token, a
-minute, or a call."* — the disambiguating clause moved earlier than the
-original draft, since "Zero AI markup" alone in the H1 has one extra beat
-before a reader learns markup ≠ cost.
+- Eyebrow: `AI phone agents`
+- H1: **"Deploy agents."** / *"No demo needed."*
+- Subhead: *"Vonod deploys the voice agents behind your campaigns — inbound
+  and outbound, at scale. Bring your own OpenAI, Deepgram, ElevenLabs, and
+  Twilio keys. No demo. No sales call. No markup on the AI."*
 
-> **Conflict resolved.** PR #1 (`redesign/hero`) shipped candidate A without
-> the billing wedge — exactly the state this document existed to flag. This
-> pass re-cut the H1 to B directly on top of PR #1's layout fixes (the globe
-> horizon, the mobile visibility fix), rather than merging A and patching the
-> wedge in underneath it. If PR #1 merges to `main` before this branch does,
-> rebase; don't let A go live and leave this branch stale.
+What each piece is doing:
+
+- **"Deploy agents."** makes the agent the unit, not the call or the
+  campaign — resolves the whole back-and-forth above in one move, and is
+  factually accurate about what Vonod does (deploys/orchestrates) rather
+  than what it doesn't (run your AI).
+- **"No demo needed."** is a deliberate pivot from every earlier draft, all
+  of which tried to describe the product. The founder's framing: a visitor
+  doesn't linger on a hero reading copy — the job of this screen is to get
+  them to click "Launch your first campaign" (the CTA already says exactly
+  that; no change needed there) and try it, not to fully explain Vonod
+  before they've touched it. There's a free tier for building and trying
+  agents, which is what makes "no demo needed" a claim rather than just an
+  invitation.
+- The billing wedge ("no markup on the AI") **moved out of the H1 and into
+  the subhead.** MESSAGING.md §3 still ranks it differentiator #1, and it's
+  still stated up front, in the hero, in the last thing the subhead says —
+  but it is no longer the loudest thing on the screen. That's a real trade,
+  made deliberately in favor of the action-oriented framing above, not an
+  oversight.
+- Inbound and outbound are both named explicitly in the subhead ("behind
+  your campaigns — inbound and outbound"), since neither the H1 nor the
+  eyebrow can carry that distinction without getting long or awkward.
+
+**Open, not yet decided:** the eyebrow shipped as `AI phone agents`, which
+no longer matches `index.html`'s `<title>`/`<meta description>` (still
+"AI calling campaigns," §6's chosen search phrase). Whether the SEO phrase
+should follow the hero's pivot from campaigns to agents is a real question
+— "AI phone agents" may or may not be what buyers actually search — and
+wasn't part of this round's decision. Flagging rather than changing it.
 
 ---
 
@@ -267,12 +287,15 @@ trailing-slash Pages URL), `og:site_name`, `og:locale`, `twitter:card`.
 
 Editorial — I have made a provisional call, override if you disagree:
 
-- [x] Primary search phrase: **"AI calling campaigns"** (§6). Shipped.
 - [x] Title, description, OG and Twitter tags (§6). Shipped.
-- [x] Hero H1, eyebrow and subhead: shipped as candidate B, trimmed for one
-      line per half (§4). Reasonable to revert if you'd rather ship A (PR #1)
-      as-is and take the billing wedge as a loss on the hero specifically —
-      but that reopens the exact gap §3 flags as differentiator #1.
+- [~] Primary search phrase: shipped as **"AI calling campaigns"** (§6), but
+      the hero moved on from "campaigns" to "agents" as its anchor word (§4)
+      after this was written. Now inconsistent with the hero's own eyebrow
+      (`AI phone agents`). Not re-decided — see the open note at the end of
+      §4's hero writeup.
+- [x] Hero H1, eyebrow and subhead: landed on "Deploy agents. / No demo
+      needed." after several rounds — full reasoning and the trade-offs
+      taken (billing wedge out of the H1, into the subhead) are in §4.
 - [x] Trust strip reframed to "Your keys, your bill —" (§5).
 - [x] BYOK effort named in "How it works" step 02 (§1, §5).
 - [x] OSS footer line added (§5).
