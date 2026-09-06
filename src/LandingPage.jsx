@@ -96,7 +96,9 @@ const CALL = [
   { who: 'user', start: 6.4, end: 8.1, text: 'Actually, Friday works better.', barge: true },  // overlaps the agent
   { who: 'agent', start: 8.5, end: 11.0, text: 'Perfect — Friday at 10. Let me set that up.' },
 ];
-const CALL_LOOP = 16.5;     // seconds before the demo restarts
+const CALL_LOOP = 15.2;     // seconds before the demo restarts — trimmed from
+                            // 16.5s; the old tail after the last tool call sat
+                            // idle for nearly 2s with nothing to look at.
 
 const N_BARS = 40;
 // Per-bar spectral weight — fuller in the middle (formant-ish), with a stable
@@ -104,6 +106,15 @@ const N_BARS = 40;
 const SPEC = Array.from({ length: N_BARS }, (_, i) => {
   const x = i / (N_BARS - 1);
   return (0.45 + 0.55 * Math.sin(Math.PI * x)) * (0.78 + 0.22 * Math.sin(i * 12.9898));
+});
+// How much each bar participates in the idle "breathing" floor (below) — a
+// taper that peaks at the centre and reaches zero before the row's ends, so
+// silence reads as one deliberate pulse rather than 40 bars of low-grade
+// noise. That uniform noise floor was the exact thing that made the waveform
+// look broken rather than quiet whenever nobody was talking.
+const CENTER_W = Array.from({ length: N_BARS }, (_, i) => {
+  const d = Math.abs(i - (N_BARS - 1) / 2) / ((N_BARS - 1) / 2);
+  return Math.max(0, 1 - d * 1.6);
 });
 
 // Speech envelope for a speaker at time t: phrase-level pauses + ~5 Hz syllables.
@@ -136,6 +147,7 @@ function LiveTranscript() {
   const barsRef = useRef([]);
   const waveRef = useRef(null);
   const capRef = useRef(null);
+  const timeRef = useRef(null);
   const chipRef = useRef({});
 
   useEffect(() => {
@@ -147,6 +159,7 @@ function LiveTranscript() {
     if (reduce) {
       setTx({ vis: CALL.length, actIdx: -1, actWords: 0, acts: '222' });
       bars.forEach((b, i) => { if (b) b.style.height = `${20 + SPEC[i] * 45}%`; });
+      if (timeRef.current) timeRef.current.textContent = '00:14';
       return undefined;
     }
 
@@ -169,18 +182,21 @@ function LiveTranscript() {
       const share = sum > 0.001 ? la / sum : 0.5;
       if (waveRef.current) waveRef.current.style.setProperty('--p', `${(share * 100).toFixed(1)}%`);
 
-      // One shared waveform = the line audio (both voices summed), with an
-      // ambient noise floor so the mic is never perfectly dead (quiet ≠ flat).
+      // One shared waveform = the line audio (both voices summed). When
+      // nobody's talking it settles to a slow centred breathing pulse — a
+      // mic on standby, not a flat dead line — rather than every bar sitting
+      // at the same low hum.
       const amp = Math.min(1.2, sum * (both ? 1.15 : 1));
       const quiet = 1 - Math.min(1, sum * 2);
+      const breathe = 0.5 + 0.5 * Math.sin(t * 1.1);
       for (let i = 0; i < N_BARS; i++) {
         const flick = 0.4 + 0.6 * Math.abs(Math.sin(t * (6 + i * 0.55) + i));
         let target = amp * SPEC[i] * flick;
         if (both) target += 0.12 * Math.abs(Math.sin(t * (9 + i) + i * 3)); // messier when both talk
         if (Math.sin(t * (2.7 + i) + i * 2) > 0.9) target *= 0.25;          // dropouts
-        const noise = (0.05 + 0.05 * Math.abs(Math.sin(t * (5 + i * 0.7) + i))) * (0.2 + 0.8 * quiet);
-        target = Math.max(noise, Math.min(1, target));
-        cur[i] += (target - cur[i]) * 0.45;
+        const idleFloor = (0.015 + CENTER_W[i] * 0.11 * breathe) * quiet;
+        target = Math.max(idleFloor, Math.min(1, target));
+        cur[i] += (target - cur[i]) * 0.5;
         const b = bars[i];
         if (b) b.style.height = `${6 + cur[i] * 90}%`;
       }
@@ -190,6 +206,11 @@ function LiveTranscript() {
       if (chipRef.current.user) chipRef.current.user.style.opacity = lu > 0.06 ? '1' : '0.32';
       if (capRef.current) {
         capRef.current.textContent = both ? 'Both speaking' : la > 0.06 ? 'Agent speaking' : lu > 0.06 ? 'Marcos speaking' : 'Listening…';
+      }
+      // The call-duration readout used to be a hardcoded "00:14" that never
+      // moved — dead chrome on a widget whose whole point is looking live.
+      if (timeRef.current) {
+        timeRef.current.textContent = `00:${String(Math.floor(t)).padStart(2, '0')}`;
       }
 
       // Transcript: visible utterances + word-streaming for the talking one.
@@ -236,7 +257,7 @@ function LiveTranscript() {
         <span className="text-caption font-medium text-body">Call 2,417 of 5,000</span>
         <span className="ml-auto flex items-center gap-2 font-mono text-[0.6875rem] text-body">
           <span className="inline-flex items-center gap-1 text-body-strong"><Zap size={11} /> {AVG_REPLY} reply</span>
-          <span>00:14</span>
+          <span ref={timeRef}>00:00</span>
         </span>
       </div>
 
@@ -304,10 +325,19 @@ function LiveTranscript() {
         })}
       </div>
 
-      {/* Actions — the agent works across your tools, not just one */}
+      {/* Actions — the agent works across your tools, not just one. The three
+          cards used to sit unrelated to each other; a fill track ties them
+          into the one sequence they actually are, and the swap from spinner
+          to check now animates in instead of popping. */}
       <div className="px-4 py-3 border-t border-hairline">
         <div className="flex items-center gap-1.5 mb-2 text-caption-uppercase uppercase text-body">
           <Zap size={11} /> Takes action across your tools
+        </div>
+        <div className="relative h-1 mb-2.5 rounded-full bg-hairline overflow-hidden">
+          <div
+            className="absolute inset-y-0 left-0 bg-success rounded-full transition-[width] duration-500 ease-out"
+            style={{ width: `${(actStates.filter((s) => s >= 2).length / ACTIONS.length) * 100}%` }}
+          />
         </div>
         <div className="grid grid-cols-3 gap-2">
           {ACTIONS.map((a, i) => {
@@ -316,11 +346,11 @@ function LiveTranscript() {
             const isDone = st >= 2;
             return (
               <div key={a.id}
-                className={`rounded-xl border px-2.5 py-2 transition-all duration-300 ${active ? 'border-hairline-strong bg-surface-card-elevated/60' : 'border-hairline opacity-55'}`}>
+                className={`rounded-xl border px-2.5 py-2 transition-all duration-300 ${active ? 'border-hairline-strong bg-surface-card-elevated/60 -translate-y-0.5 shadow-lg shadow-black/30' : 'border-hairline opacity-55'}`}>
                 <div className="flex items-center gap-1.5 mb-1">
                   <a.Icon size={13} className={isDone ? 'text-success' : 'text-body-strong'} />
-                  {isDone ? <Check size={11} className="ml-auto text-success" />
-                    : active ? <span className="lp-dot ml-auto" /> : null}
+                  {isDone ? <Check key="done" size={11} className="ml-auto text-success lp-pop" />
+                    : active ? <span key="spin" className="lp-spin ml-auto" /> : null}
                 </div>
                 <div className="text-[0.625rem] font-medium text-body-strong leading-tight truncate">{a.label}</div>
                 <div className="font-mono text-[0.5625rem] text-body truncate">{a.fn}</div>
@@ -614,15 +644,24 @@ function LandingStyles() {
       .cw i { flex:1 1 0; min-width:2px; max-width:6px; height:6%; border-radius:3px; will-change:height;
         background: linear-gradient(to top, var(--ca) var(--p, 50%), var(--cb) var(--p, 50%)); }
 
-      /* Tiny pulsing dot for an in-flight tool call. */
-      .lp-dot { width:5px; height:5px; border-radius:9999px; background: var(--color-ink); animation: lp-dot 1s ease-in-out infinite; }
-      @keyframes lp-dot { 0%,100%{ opacity:.3 } 50%{ opacity:1 } }
+      /* A thin spinner for an in-flight tool call — reads as a system doing
+         work, where the pulsing dot it replaced read closer to a chat "typing"
+         indicator, which is the wrong register for an ops tool. */
+      .lp-spin { width:10px; height:10px; border-radius:9999px; flex-shrink:0;
+        border:1.5px solid var(--color-hairline-strong); border-top-color: var(--color-ink);
+        animation: lp-spin .8s linear infinite; }
+      @keyframes lp-spin { to { transform: rotate(360deg); } }
+
+      /* Pop-in for the checkmark that replaces the spinner once a tool call
+         finishes, so the state change reads as an event, not a silent swap. */
+      .lp-pop { animation: lp-pop .3s cubic-bezier(.2,.8,.2,1) both; }
+      @keyframes lp-pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
       /* Steady (non-blinking) streaming cursor while a line is being spoken. */
       .lp-caret { display:inline-block; width:2px; height:0.95em; margin-left:2px; vertical-align:-1px; border-radius:1px; opacity:.75; }
 
       @media (prefers-reduced-motion: reduce) {
-        .lp-dot { animation: none !important; }
+        .lp-spin, .lp-pop { animation: none !important; }
         [data-reveal].reveal { opacity:1 !important; transform:none !important; transition:none !important; }
       }
     `}</style>
