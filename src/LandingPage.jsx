@@ -34,8 +34,10 @@ import GlobeBackground from './components/GlobeBackground';
 const APP_URL = import.meta.env.VITE_APP_URL || 'https://vonod-frontend.fly.dev';
 
 // Vite rewrites absolute asset URLs inside index.html but not runtime strings
-// in JSX, so public/ assets have to carry the base path themselves — the site
-// is served from /vonod-web/ on GitHub Pages, not from the domain root.
+// in JSX, so public/ assets have to carry the base path themselves. That base
+// is '/' today (the site is served from the vonod.ai domain root via
+// public/CNAME) rather than a GitHub Pages project-page subpath, but this
+// stays in place so nothing here breaks if that ever changes again.
 const asset = (name) => `${import.meta.env.BASE_URL}${name}`;
 
 function useReveal() {
