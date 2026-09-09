@@ -49,9 +49,10 @@ const PILLARS = [
   { href: '/campaigns/', icon: Radio, title: 'Campaigns',
     body: 'Run one agent across thousands of contacts. Import a list, dial in each contact’s own time zone, branch on outcomes, retry what didn’t land.',
     cta: 'How campaigns work' },
-  { href: '/mcp/', icon: Terminal, title: 'Vonod MCP',
-    body: 'Drive all of it from Claude, Cursor or your own CLI. Create the agent, launch the run, check where it stands — in plain language, without opening Vonod.',
-    cta: 'Explore Vonod MCP' },
+  // A third pillar for Vonod MCP belongs here and is written and built at
+  // /mcp/, but the public server it describes does not exist yet, so the page
+  // ships unannounced. Restore this entry (and the nav links in SiteHeader
+  // and SiteFooter) the day it does.
 ];
 
 const FEATURES = [
@@ -206,13 +207,13 @@ export default function LandingPage() {
           has a page; this is the junction. */}
       <section className="max-w-content mx-auto px-6 py-xxl md:py-section">
         <div data-reveal className="reveal max-w-[46rem] mb-12">
-          <h2 className="text-display-sm sm:text-display-md lg:text-display-xl font-medium mb-base">Three pieces, one system.</h2>
+          <h2 className="text-display-sm sm:text-display-md lg:text-display-xl font-medium mb-base">Two graphs, one system.</h2>
           <p className="text-body text-body-md">
-            An agent decides what happens inside a call. A campaign decides who gets called and
-            what happens after. Vonod MCP lets you drive both without opening Vonod.
+            An agent decides what happens inside a call. A campaign decides who gets called, when,
+            and what happens after. You build both by describing them.
           </p>
         </div>
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-2 gap-4 max-w-[52rem]">
           {PILLARS.map((p, i) => (
             <a key={p.href} href={p.href} data-reveal
                className="reveal group card p-7 flex flex-col hover:border-hairline-strong hover:-translate-y-1 transition-all duration-300"

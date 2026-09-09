@@ -11,7 +11,7 @@ export default function SiteFooter() {
         <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
           <a href="/voice-agents/" className="hover:text-body-strong transition-colors">Voice agents</a>
           <a href="/campaigns/" className="hover:text-body-strong transition-colors">Campaigns</a>
-          <a href="/mcp/" className="hover:text-body-strong transition-colors">Vonod MCP</a>
+          {/* Vonod MCP is intentionally not linked yet — see SiteHeader. */}
         </nav>
         <p>Self-hostable, AGPL-3.0 — audit the code or run it yourself.</p>
       </div>

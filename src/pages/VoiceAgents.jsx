@@ -131,12 +131,9 @@ export default function VoiceAgentsPage() {
           <div data-reveal className="reveal">
             <WorkflowCanvas />
           </div>
-          <div data-reveal className="reveal mt-lg">
-            <a href="/mcp/" className="group inline-flex items-center gap-1.5 text-body-sm font-medium text-body-strong underline decoration-hairline-strong underline-offset-4 hover:decoration-ink transition-colors">
-              Do the same from Claude or your own CLI
-              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-            </a>
-          </div>
+          {/* A link to /mcp/ ("do the same from Claude or your own CLI")
+              belongs here and the page is built, but the public MCP server
+              does not exist yet — see SiteHeader. Restore it when it ships. */}
         </div>
       </section>
 

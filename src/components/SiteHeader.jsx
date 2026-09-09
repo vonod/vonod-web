@@ -5,10 +5,14 @@ import { asset, APP_URL } from '../lib/site';
 // build an agent, you run a campaign with it, you drive both from your own
 // tools. Deep pages exist because the landing was carrying all three at once
 // and had stopped being readable.
+// /mcp/ is deliberately absent. The page is built and reachable by URL, but
+// the public MCP server it describes does not exist yet, so it is not
+// announced anywhere in the site's navigation. Put it back — here, in
+// SiteFooter, in the landing's PILLARS and in the VoiceAgents cross-link —
+// the day the server ships.
 const NAV = [
   { href: '/voice-agents/', label: 'Voice agents' },
   { href: '/campaigns/', label: 'Campaigns' },
-  { href: '/mcp/', label: 'Vonod MCP' },
 ];
 
 export default function SiteHeader({ current }) {
