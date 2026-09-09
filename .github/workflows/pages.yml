@@ -45,9 +45,10 @@ jobs:
         env:
           VITE_APP_URL: ${{ env.VITE_APP_URL }}
 
-      # Pages serves static files: a deep link like /features would 404 on
-      # reload without this. The site is a single page today, but the copy
-      # costs nothing and stops the class of bug before it appears.
+      # Catch-all for mistyped or retired URLs. The real pages (/voice-agents/,
+      # /campaigns/, /mcp/) are each their own index.html in dist, so Pages
+      # serves them directly — this is not an SPA fallback, and adding a page
+      # means adding an entry in vite.config.js, not relying on this line.
       - run: cp dist/index.html dist/404.html
 
       - uses: actions/configure-pages@v5

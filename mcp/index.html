@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/logo_blanco_vonod.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0f0f0f" />
+    <!-- Title, description and the OG pair say the SAME thing on purpose —
+         see MESSAGING.md §6. Title stays under ~60 chars so it survives the
+         SERP cut; description under ~155. -->
+    <title>Vonod MCP — run AI calling campaigns from your editor</title>
+    <meta name="description" content="Connect Vonod MCP to Claude, Cursor or your own CLI. Create voice agents, import lists, launch campaigns and check live status in plain language." />
+    <link rel="canonical" href="https://vonod.ai/mcp/" />
+    <!-- Unlisted for now: this page describes a public MCP server that has not
+         shipped, so it is reachable by URL but is not linked from anywhere in
+         the site and should not turn up in search either. Remove this line the
+         day the server ships, together with the nav entries in SiteHeader,
+         SiteFooter, the landing's PILLARS and the VoiceAgents cross-link. -->
+    <meta name="robots" content="noindex, follow" />
+
+    <meta property="og:title" content="Vonod MCP — run AI calling campaigns from your editor" />
+    <meta property="og:description" content="Connect Vonod MCP to Claude, Cursor or your own CLI. Create voice agents, import lists, launch campaigns and check live status in plain language." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vonod.ai/mcp/" />
+    <meta property="og:site_name" content="Vonod" />
+    <meta property="og:locale" content="en" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Vonod MCP — run AI calling campaigns from your editor" />
+    <meta name="twitter:description" content="Connect Vonod MCP to Claude, Cursor or your own CLI. Create voice agents, import lists, launch campaigns and check live status in plain language." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+
+    <style>
+      html { background-color: #0f0f0f; color-scheme: dark; }
+    </style>
+  </head>
+  <body class="antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/mcp.jsx"></script>
+  </body>
+</html>
